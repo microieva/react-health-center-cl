@@ -1,6 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const LandingPage: React.FC = () => {
+  const [contactMe, setContactMe] = useState(true);
+  const [anonymous, setAnonymous] = useState(false);
+
   useEffect(() => {
     const originalScrollBehavior = document.documentElement.style.scrollBehavior;
     document.documentElement.style.scrollBehavior = 'smooth';
@@ -27,11 +30,29 @@ const LandingPage: React.FC = () => {
         >
           <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ fontWeight: 700, fontSize: 24, color: '#f8fafc' }}>Health Center</div>
-            <nav style={{ display: 'flex', gap: 24, fontSize: 14 }}>
+            <nav style={{ display: 'flex', gap: 24, fontSize: 14, alignItems: 'center' }}>
+
               <a href="#services" style={{ color: '#f8fafc', textDecoration: 'none' }}>Services</a>
               <a href="#about" style={{ color: '#f8fafc', textDecoration: 'none' }}>About</a>
-              <a href="#testimonials" style={{ color: '#f8fafc', textDecoration: 'none' }}>Testimonials</a>
+              <a href="#testimonials" style={{ color: '#f8fafc', textDecoration: 'none' }}>Testimonials</a>              
+              <a href="#locations" style={{ color: '#f8fafc', textDecoration: 'none' }}>Locations</a>
+              <a href="#feedback" style={{ color: '#f8fafc', textDecoration: 'none' }}>Send feedback</a>              
               <a href="#contact" style={{ color: '#f8fafc', textDecoration: 'none' }}>Contact</a>
+              <button
+                type="button"
+                
+                style={{
+                  border: '1px solid rgba(175, 111, 174, 0.65)',
+                  color: '#f8fafc',
+                  backgroundColor: 'transparent',
+                  padding: '5px 18px',
+                  borderRadius: 5,
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                }}
+              >
+                Log in
+              </button>
             </nav>
           </div>
         </div>
@@ -134,6 +155,8 @@ const LandingPage: React.FC = () => {
           </div>
         </section>
 
+       
+
         <section id="testimonials" style={{ backgroundColor: '#0f172a', color: '#fff', padding: '60px 20px', marginBlock: '4rem' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto', textAlign: 'center' }}>
             <p style={{ textTransform: 'uppercase', letterSpacing: '0.2em', fontSize: 12, margin: 0, color: '#94a3b8' }}>Testimonials</p>
@@ -144,7 +167,7 @@ const LandingPage: React.FC = () => {
                 { name: 'Noah L.', quote: 'Fast appointment scheduling and excellent follow-up care made a huge difference.' },
                 { name: 'Sofia K.', quote: 'Great experience for my children. The doctors explained everything in a calm, reassuring way.' },
               ].map((item) => (
-                <div key={item.name} style={{ backgroundColor: '#1e293b', padding: 28, borderRadius: 20, minHeight: 180 }}>
+                <div key={item.name} style={{ padding: 28, borderRadius: 20, backgroundColor: '#1e293b', boxShadow: '0 10px 24px rgba(15, 23, 42, 0.22)', borderTop: '4px solid rgba(198, 205, 222, 0.47)' }}>
                   <p style={{ margin: '0 0 24px', color: '#cbd5e1' }}>&ldquo;{item.quote}&rdquo;</p>
                   <p style={{ margin: 0, fontWeight: 700 }}>{item.name}</p>
                 </div>
@@ -152,7 +175,6 @@ const LandingPage: React.FC = () => {
             </div>
           </div>
         </section>
-
         <section id="contact" style={{ padding: '60px 20px' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'start' }}>
             <div>
@@ -189,10 +211,99 @@ const LandingPage: React.FC = () => {
             </div>
           </div>
         </section>
+        <section id="feedback" style={{ backgroundColor: '#0f172a', color: '#fff', padding: '60px 20px' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'start' }}>
+            
+            <div style={{ backgroundColor: '#1e293b', borderRadius: 24, padding: 32, boxShadow: '0 25px 50px rgba(15, 23, 42, 0.08)' }}>
+              
+              <form style={{ display: 'grid', gap: 16 }}>
+                <label style={{ display: 'grid', gap: 8, fontSize: 14, color: '#cbd5e1' }}>
+                  Feedback
+                  <textarea placeholder="How was your experience?" rows={5} style={{ borderRadius: 12, border: '1px solid #334155', padding: '12px 14px', width: '100%', backgroundColor: '#0f172a', color: '#fff' }} />
+                </label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                  <div style={{ display: 'grid', gap: 12 }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#cbd5e1' }}>
+                      <input
+                        type="checkbox"
+                        checked={contactMe}
+                        onChange={(event) => setContactMe(event.target.checked)}
+                        style={{ accentColor: '#af6faee6' }}
+                      />
+                      Contact me
+                    </label>
+                      <label style={{ display: 'grid', gap: 8, fontSize: 14, color: '#cbd5e1' }}>
+                        Email
+                      <input type="email" placeholder="you@example.com" style={{ visibility: contactMe ? 'visible' : 'hidden', borderRadius: 12, border: '1px solid #334155', padding: '12px 14px', width: '100%', backgroundColor: '#0f172a', color: '#fff' }} />
+                      </label>
+                  </div>
+                  <div style={{ display: 'grid', gap: 12 }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#cbd5e1' }}>
+                      <input
+                        type="checkbox"
+                        checked={anonymous}
+                        onChange={(event) => setAnonymous(event.target.checked)}
+                        style={{ accentColor: '#af6faee6' }}
+                      />
+                      Anonymous
+                    </label>
+                      <label style={{ display: 'grid', gap: 8, fontSize: 14, color: '#cbd5e1' }}>
+                        Name
+   
+                        <input type="text" placeholder="Your name" style={{ visibility: anonymous ? 'hidden' : 'visible', borderRadius: 12, border: '1px solid #334155', padding: '12px 14px', width: '100%', backgroundColor: '#0f172a', color: '#fff' }} />
+                      </label>
+                  </div>
+
+                </div>
+                <button type="submit" style={{ backgroundColor: '#af6faee6', color: '#0f172a', border: 'none', padding: '14px 20px', borderRadius: 12, cursor: 'pointer', fontWeight: 600 }}>Send feedback</button>
+              </form>
+            </div>
+            <div>
+              <p style={{ textTransform: 'uppercase', letterSpacing: '0.2em', fontSize: 12, margin: 0, color: '#94a3b8' }}>Feedback</p>
+              <h2 style={{ fontSize: 36, margin: '16px 0 24px', color: '#f8fafc' }}>Share your experience with our care team.</h2>
+              <p style={{ color: '#cbd5e1', fontSize: 18, margin: 0 }}>We value your feedback to improve our services and ensure every visit is exceptional.</p>
+            </div>
+          </div>
+        </section>
+         <section id="locations" style={{ marginBlock: '4rem', padding: '60px 20px', backgroundColor: '#f8fafc' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: 40 }}>
+              <p style={{ textTransform: 'uppercase', color: '#0284c7', letterSpacing: '0.2em', fontSize: 12, margin: 0 }}>Locations</p>
+              <h2 style={{ fontSize: 36, margin: '16px 0 0', color: '#af6faee6' }}>Find us across Brussels</h2>
+              <p style={{ maxWidth: 640, margin: '16px auto 0', color: '#475569', fontSize: 18 }}>Visit any of our three convenient Brussels clinics with easy access and friendly support.</p>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
+              {[
+                { title: 'City Center Clinic', address: 'Rue de la Loi 10, 1000 Brussels', neighborhood: 'Central Brussels' },
+                { title: 'Ixelles Family Care', address: 'Avenue Louise 45, 1050 Brussels', neighborhood: 'Ixelles' },
+                { title: 'Etterbeek Health Hub', address: 'Chaussée de Wavre 212, 1040 Brussels', neighborhood: 'Etterbeek' },
+              ].map((location) => (
+                <div key={location.title} style={{ borderRadius: 20, backgroundColor: '#fff', boxShadow: '0 10px 24px rgba(15, 23, 42, 0.08)', overflow: 'hidden' }}>
+                  <div style={{ position: 'relative', height: 180, backgroundColor: '#dbeafe', overflow: 'hidden' }}>
+                    <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(135deg, rgba(59,130,246,0.18), rgba(14,165,233,0.14))' }} />
+                    <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), transparent 20%), radial-gradient(circle at 70% 60%, rgba(148,163,184,0.28), transparent 18%)' }} />
+                    <div style={{ position: 'absolute', left: 20, bottom: 20, color: '#0f172a', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{ width: 40, height: 40, display: 'grid', placeItems: 'center', borderRadius: '50%', backgroundColor: 'rgba(15,23,42,0.8)', color: '#fff' }}>🗺️</span>
+                      <div>
+                        <p style={{ margin: 0, fontSize: 14, textTransform: 'uppercase', letterSpacing: '0.12em' }}>Brussels</p>
+                        <p style={{ margin: '6px 0 0', fontSize: 16 }}>{location.neighborhood}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ padding: 24 }}>
+                    <h3 style={{ margin: '0 0 10px', fontSize: 22, color: '#0f172a' }}>{location.title}</h3>
+                    <p style={{ margin: '0 0 8px', color: '#475569' }}>{location.address}</p>
+                    <p style={{ margin: 0, color: '#64748b', fontSize: 14 }}>Open weekdays with evening hours available.</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer style={{ backdropFilter: 'blur(18px)',
-            backgroundColor: 'rgba(15, 23, 42, 0.22)', color: '#94a3b8', padding: '24px 20px' }}>
+            backgroundColor: 'rgba(15, 23, 42, 0.22)', color: 'white', padding: '24px 20px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <p style={{ margin: 0 }}>© 2026 Health Center. All rights reserved.</p>
           <p style={{ margin: 0 }}>Trusted health services for your family.</p>
