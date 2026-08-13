@@ -1,6 +1,49 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Add this to your main CSS file (index.css, App.css, or globals.css) */
+/* :root {
+
+  --color-primary-deep-blue: #0f172a;
+  --color-primary-white: #f8fafc;
+  --color-primary-light-gray: #e2e8f0;
+  --color-primary-medium-gray: #cbd5e1;
+  --color-primary-dark-gray: #475569;
+  --color-primary-slate-gray: #64748b;
+  --color-primary-charcoal: #334155;
+
+
+  --color-accent-purple: #af6faee6;
+  --color-accent-purple-border: rgba(175, 111, 174, 0.65);
+
+  --color-status-blue: #0284c7;
+  --color-status-blue-light: #dbeafe;
+  
+
+  --color-white-08: rgba(255, 255, 255, 0.08);
+  --color-white: #fff;
+  --color-transparent: transparent;
+
+
+  --color-bg-light-blue: #f1f5f9;
+  --color-bg-dark-blue: #1e293b;
+  --color-bg-white: #fff;
+  
+
+  --color-shadow-dark: rgba(15, 23, 42, 0.24);
+  --color-shadow-light: rgba(15, 23, 42, 0.08);
+  --color-shadow-medium: rgba(15, 23, 42, 0.1);
+  --color-shadow-strong: rgba(15, 23, 42, 0.22);
+  
+  --color-gradient-dark-start: rgba(15, 23, 42, 0.18);
+  --color-gradient-dark-end: rgba(15, 23, 42, 0.82);
+  --color-gradient-blue-1: rgba(59, 130, 246, 0.18);
+  --color-gradient-blue-2: rgba(14, 165, 233, 0.14);
+  --color-gradient-white: rgba(255, 255, 255, 0.35);
+  --color-gradient-gray: rgba(148, 163, 184, 0.28);
+} */
 /* 
 :root {
   --text: #6b6375;
