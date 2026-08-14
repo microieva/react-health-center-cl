@@ -3,6 +3,8 @@ import { ButtonPrimary } from "./ButtonPrimary";
 import type { FeedbackInput } from "../types";
 import { useSubmitFeedback } from "../hooks/useFeedback";
 import { CircularProgress, Snackbar } from "@mui/material";
+import { Textarea } from "./Textarea";
+import { Input } from "./Input";
 
 export const FormContact: React.FC = () => {
   const { submitFeedback, loading } = useSubmitFeedback();
@@ -62,41 +64,42 @@ export const FormContact: React.FC = () => {
       />
       
       <form className="grid gap-4" onSubmit={handleSubmit}>
-        <label className="grid gap-2 text-sm text-primary-charcoal">
+        <Input
+          name="name"
+          type="text"
+          value={formData.name || ''}
+          onChange={handleInputChange}
+          placeholder="Your name"
+          className="border-primary-medium-gray"
+          labelClassName="text-primary-charcoal"
+          required
+        >
           Name
-          <input 
-            name="name"
-            type="text" 
-            placeholder="Your name" 
-            value={formData.name || ''}
-            onChange={handleInputChange}
-            className="rounded-[12px] border border-primary-medium-gray px-[14px] py-3 w-full focus:outline-none focus:ring-2 focus:ring-accent-purple"
-          />
-        </label>
+        </Input>
         
-        <label className="grid gap-2 text-sm text-primary-charcoal">
+        <Input
+          name="email"
+          value={formData.email || ''}
+          onChange={handleInputChange}
+          placeholder="you@example.com"
+          className="border-primary-medium-gray"
+          labelClassName="text-primary-charcoal"
+          type="email"
+          required
+        >
           Email
-          <input 
-            name="email"
-            type="email" 
-            placeholder="you@example.com" 
-            value={formData.email || ''}
-            onChange={handleInputChange}
-            className="rounded-[12px] border border-primary-medium-gray px-[14px] py-3 w-full focus:outline-none focus:ring-2 focus:ring-accent-purple"
-          />
-        </label>
+        </Input>
         
-        <label className="grid gap-2 text-sm text-primary-charcoal">
+        <Textarea
+          name="text"
+          value={formData.text}
+          onChange={handleInputChange}
+          placeholder="How can we help?"
+          className="border-primary-medium-gray"
+          labelClassName="text-primary-charcoal"
+        >
           Message
-          <textarea 
-            name="text"
-            placeholder="How can we help?" 
-            rows={5} 
-            value={formData.text}
-            onChange={handleInputChange}
-            className="rounded-[12px] border border-primary-medium-gray px-[14px] py-3 w-full focus:outline-none focus:ring-2 focus:ring-accent-purple"
-          />
-        </label>
+        </Textarea>
         
         <ButtonPrimary 
           type="submit" 

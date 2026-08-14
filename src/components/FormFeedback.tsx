@@ -4,6 +4,9 @@ import { useSubmitFeedback } from "../hooks/useFeedback";
 import { ButtonPrimary } from "./ButtonPrimary";
 import Snackbar from "@mui/material/Snackbar";
 import { CircularProgress } from "@mui/material";
+import { Textarea } from "./Textarea";
+import { Input } from "./Input";
+import { Checkbox } from "./Checkbox";
 
 export const FormFeedback: React.FC = () => {
   const { submitFeedback, loading } = useSubmitFeedback();
@@ -81,65 +84,62 @@ export const FormFeedback: React.FC = () => {
       />
       
       <form className="grid gap-4" onSubmit={handleSubmit}>
-        <label className="grid gap-2 text-sm text-primary-medium-gray">
+        <Textarea
+          name="text"
+          value={formData.text}
+          onChange={handleInputChange}
+          placeholder="How was your experience?"
+          className="border-primary-charcoal bg-primary-deep-blue text-white"
+          labelClassName="text-primary-medium-gray"
+        >
           Feedback
-          <textarea 
-            name="text"
-            value={formData.text}
-            onChange={handleInputChange}
-            placeholder="How was your experience?" 
-            rows={5} 
-            className="rounded-[12px] border border-primary-charcoal px-[14px] py-3 w-full bg-primary-deep-blue text-white"
-          />
-        </label>
+        </Textarea>
         
         <div className={`grid grid-cols-2 gap-4 ${!contactMe && anonymous ? 'h-28' : ''}`}>
           <div className={`grid gap-3 ${!contactMe ? 'h-8' : ''}`}>
-            <label className="flex items-center gap-2 text-sm text-primary-medium-gray">
-              <input
-                type="checkbox"
-                checked={contactMe}
-                onChange={(event) => setContactMe(event.target.checked)}
-                className="accent-accent-purple"
-              />
-              Contact me
-            </label>
-            <label className="grid gap-2 text-sm text-primary-medium-gray">
+            <Checkbox
+              checked={contactMe}
+              onChange={setContactMe}
+              label="Contact me"
+              className="accent-accent-purple"
+              labelClassName="text-primary-medium-gray"
+            />
+
+            <Input
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              value={formData.email || ''}
+              onChange={handleInputChange}
+              className={`border-primary-charcoal  bg-primary-deep-blue text-white ${contactMe ? 'visible mb-1.5' : 'hidden'}`}
+              labelClassName="text-primary-medium-gray"
+              required={contactMe}
+            >
               Email
-              <input 
-                name="email"
-                required={contactMe}
-                value={formData.email || ''}
-                onChange={handleInputChange}
-                type="email" 
-                placeholder="you@example.com" 
-                className={`rounded-[12px] border border-primary-charcoal px-[14px] py-3 w-full bg-primary-deep-blue text-white ${contactMe ? 'visible mb-1.5' : 'hidden'}`}
-              />
-            </label>
+            </Input>
           </div>
           
           <div className={`grid gap-3 ${anonymous ? 'h-8' : ''}`}>
-            <label className="flex items-center gap-2 text-sm text-primary-medium-gray">
-              <input
-                type="checkbox"
-                checked={anonymous}
-                onChange={(event) => setAnonymous(event.target.checked)}
-                className="accent-accent-purple"
-              />
-              Anonymous
-            </label>
-            <label className="grid gap-2 text-sm text-primary-medium-gray">
+            <Checkbox
+              checked={anonymous}
+              onChange={setAnonymous}
+              label="Anonymous"
+              className="accent-accent-purple"
+              labelClassName="text-primary-medium-gray"
+            />
+            
+            <Input
+              name="name"
+              type="text"
+              placeholder="Your name"
+              value={formData.name || ''}
+              onChange={handleInputChange}
+              className={`border-primary-charcoal bg-primary-deep-blue text-white ${anonymous ? 'hidden' : 'visible mb-1.5'}`}
+              labelClassName="text-primary-medium-gray"
+              required={!anonymous}
+            >
               Name
-              <input 
-                name="name"
-                required={!anonymous}
-                value={formData.name || ''}
-                onChange={handleInputChange}
-                type="text" 
-                placeholder="Your name" 
-                className={`rounded-[12px] border border-primary-charcoal px-[14px] py-3 w-full bg-primary-deep-blue text-white ${anonymous ? 'hidden' : 'visible mb-1.5'}`}
-              />
-            </label>
+            </Input>
           </div>
         </div>
         
