@@ -6,18 +6,6 @@ import type {
   UpdateFeedbackInput 
 } from '../../types/graphql';
 
-// export const SUBMIT_FEEDBACK: TypedDocumentNode<
-//   { submitFeedback: Feedback },
-//   { input: SubmitFeedbackInput }
-// > = gql`
-//   mutation SubmitFeedback($input: FeedbackInput!) {
-//     saveFeedback(feedbackInput: $input) {
-//       ...FeedbackFields
-//     }
-//   }
-//   ${FEEDBACK_FRAGMENT}
-// `;
-
 export const SUBMIT_FEEDBACK: TypedDocumentNode<
   { saveFeedback: { success: boolean; message: string } },
   { input: FeedbackInput }

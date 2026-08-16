@@ -12,11 +12,13 @@ import {
 } from 'lucide-react';
 import { OptionCard } from "./OptionCard";
 import GoogleLogin from "./GoogleLogin";
+import { useAuth } from "../utils/AuthProvider";
 
 export const LoginOptions: React.FC = () => {
   const [isAdminLoggingIn, setIsAdminLoggingIn] = useState(false);
   const [isDoctorLoggingIn, setIsDoctorLoggingIn] = useState(false);
   const [isPatientLoggingIn, setIsPatientLoggingIn] = useState(false);
+  const { isLoggedIn } = useAuth();
 
   const handlePatientLoginClick = () => {
     setIsPatientLoggingIn(true);
@@ -148,7 +150,7 @@ export const LoginOptions: React.FC = () => {
       </div>
     }
       <CustomModal
-          isOpen={isAdminLoggingIn}
+          isOpen={isAdminLoggingIn && !isLoggedIn}
           onClose={() => setIsAdminLoggingIn(false)}
        >
         <LoginFormPsw />

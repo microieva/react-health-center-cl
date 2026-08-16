@@ -14,12 +14,13 @@ const GRAPHQL_ENDPOINT = import.meta.env.VITE_GRAPHQL_ENDPOINT || 'http://localh
 // Create HTTP link
 const httpLink = new HttpLink({
   uri: GRAPHQL_ENDPOINT,
-  credentials: 'same-origin',
+  //credentials: 'same-origin',
+  credentials: 'include',
 });
 
 // Authentication link
 const authLink = new ApolloLink((operation, forward) => {
-  const token = localStorage.getItem('auth-token');
+  const token = localStorage.getItem('token');
   
   operation.setContext(({ headers = {} }) => ({
     headers: {

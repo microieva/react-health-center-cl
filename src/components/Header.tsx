@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CustomModal } from "./Modal";
 import { LoginOptions } from "./LoginOptions";
+import { useAuth } from "../utils/AuthProvider";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const { isLoggedIn, currentUser, logout } = useAuth();
+
+  useEffect(() => {
+    if (isLoggedIn) setIsLoggingIn(false);
+  }, [isLoggedIn]);
 
   const links = [
     ["Services", "#services"],
@@ -20,21 +26,31 @@ export const Header = () => {
       <div className="backdrop-blur-[18px] bg-[rgba(15,23,42,0.22)] border-b border-white-08 px-5 py-3">
         <div className="max-w-[1200px] mx-auto flex justify-between items-center">
           <div className="font-bold text-2xl text-primary-white">Health Center</div>
-
+          {currentUser && (
+            <div className="text-primary-white text-sm">
+              Welcome, {currentUser.email}!
+            </div>
+          )}
           {/* Desktop nav */}
           <nav className="hidden md:flex gap-6 text-sm items-center">
-            {links.map(([label, href]) => (
+            {!isLoggedIn && links.map(([label, href]) => (
               <a key={label} href={href as string} className="text-primary-white no-underline">
                 {label}
               </a>
             ))}
-            <button
+            {!isLoggedIn ? <button
               onClick={() => setIsLoggingIn(true)}
               type="button"
               className="border border-accent-purple-border text-primary-white bg-transparent px-[18px] py-[5px] rounded-[5px] cursor-pointer font-semibold"
             >
               Log in
-            </button>
+            </button> : <button
+              onClick={logout}
+              type="button"
+              className="border border-accent-purple-border text-primary-white bg-transparent px-[18px] py-[5px] rounded-[5px] cursor-pointer font-semibold"
+            >
+              Log out
+            </button>}
           </nav>
 
           {/* Mobile hamburger */}
