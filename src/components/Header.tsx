@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { CustomModal } from "./Modal";
+import { LoginOptions } from "./LoginOptions";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const links = [
     ["Services", "#services"],
@@ -26,6 +29,7 @@ export const Header = () => {
               </a>
             ))}
             <button
+              onClick={() => setIsLoggingIn(true)}
               type="button"
               className="border border-accent-purple-border text-primary-white bg-transparent px-[18px] py-[5px] rounded-[5px] cursor-pointer font-semibold"
             >
@@ -67,7 +71,7 @@ export const Header = () => {
               ))}
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={() => setIsLoggingIn(true)}
                 className="border border-accent-purple-border text-primary-white bg-transparent px-[18px] py-[5px] rounded-[5px] cursor-pointer font-semibold w-fit"
               >
                 Log in
@@ -76,6 +80,13 @@ export const Header = () => {
           </div>
         )}
       </div>
+
+      <CustomModal
+        isOpen={isLoggingIn}
+        onClose={() => setIsLoggingIn(false)}
+      >
+        <LoginOptions />
+      </CustomModal>
     </header>
   );
-};
+}
