@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Mail, 
   Lock, 
@@ -8,20 +9,42 @@ import {
   Shield,
   Sparkles
 } from 'lucide-react';
+import { useLogin } from '../hooks/useLogin';
+import { Snackbar } from '@mui/material';
+
 
 export const LoginFormPsw = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+
+  const { login, loading, error } = useLogin();
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
-    // Simulate login
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
+    setLoginError(null);
+
+    login(email, password)
+      .then((response) => {
+        if (response?.success) {
+          console.log('Login successful:', response.data);
+          navigate('/dashboard');
+        } else {
+          setLoginError(error || 'Login failed');
+        }
+      })
+      .catch((err) => {
+        console.error('Unexpected error during login:', err);
+        setLoginError('An unexpected error occurred');
+      });
+  };
+
+  const handleCloseSnackbar = () => {
+    setLoginError(null);
+    setEmail('');
+    setPassword('');
   };
 
   return (
@@ -171,7 +194,7 @@ export const LoginFormPsw = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={loading}
               className="relative w-full py-3 rounded-lg font-medium transition-all duration-300 overflow-hidden group"
               style={{
                 background: 'linear-gradient(135deg, #af6faee6, rgba(175, 111, 174, 0.8))',
@@ -180,7 +203,7 @@ export const LoginFormPsw = () => {
               }}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
-                {isLoading ? (
+                {loading ? (
                   <>
                     <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
@@ -242,6 +265,14 @@ export const LoginFormPsw = () => {
           </div>
         </div>
       </div>
+      <Snackbar
+          anchorOrigin={{ horizontal: "right", vertical: "top" }}
+          open={error !== null || loginError !== null}
+          onClose={handleCloseSnackbar}
+          message={error || loginError || "Login failed"}
+          key="topright"
+          className="bg-white text-primary-charcoal w-full py-4"
+        />
     </div>
   );
 };

@@ -5,8 +5,32 @@ import { FormFeedback } from '../components/FormFeedback';
 import { FormContact } from '../components/FormContact';
 import { ButtonPrimary } from '../components/ButtonPrimary';
 import { TypographyAccent } from '../components/TypographyAccent';
+import { useAuth } from '../utils/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 const LandingPage: React.FC = () => {
+   const { isLoggedIn, currentUser } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn && currentUser) {
+      const redirectPath = getRedirectPath(currentUser.userRole);
+      navigate(redirectPath, { replace: true });
+    }
+  }, [isLoggedIn, currentUser, navigate]);
+
+  const getRedirectPath = (role?: string) => {
+    switch (role) {
+      case 'admin':
+        return '/admin/dashboard';
+      case 'doctor':
+        return '/doctor/dashboard';
+      case 'patient':
+        return '/patient/dashboard';
+      default:
+        return '/dashboard';
+    }
+  };
 
   useEffect(() => {
     const originalScrollBehavior = document.documentElement.style.scrollBehavior;
@@ -15,6 +39,10 @@ const LandingPage: React.FC = () => {
       document.documentElement.style.scrollBehavior = originalScrollBehavior;
     };
   }, []);
+
+  if (isLoggedIn) {
+    return null; // or a loading spinner
+  }
 
   return (
     <div className="font-sans text-primary-deep-blue leading-[1.6] bg-primary-white">
