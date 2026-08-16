@@ -10,6 +10,10 @@ export const ButtonPrimary: React.FC<React.ButtonHTMLAttributes<HTMLButtonElemen
         px-5 py-[14px] rounded-[12px] 
         cursor-pointer 
         font-semibold 
+        hover:bg-transparent
+        hover:text-accent-purple
+        border border-accent-purple-border
+        transition-colors duration-300 ease-in-out
         ${props.disabled ? 'opacity-70 cursor-not-allowed' : ''} 
         `
       }
