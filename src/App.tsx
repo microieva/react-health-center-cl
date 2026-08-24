@@ -2,9 +2,6 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './utils/AuthProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
-
-
-// Protected Pages
 import { DashboardPage }from './pages/DashboardPage';
 import LandingPage from './pages/LandingPage';
 import { AdminDashboard } from './components/dashboard/AdminDashboard';

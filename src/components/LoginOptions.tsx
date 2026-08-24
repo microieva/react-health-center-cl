@@ -13,15 +13,18 @@ import {
 import { OptionCard } from "./OptionCard";
 import GoogleLogin from "./GoogleLogin";
 import { useAuth } from "../utils/AuthProvider";
+import { useBankingAuth } from "../hooks/useBankingAuth";
 
 export const LoginOptions: React.FC = () => {
   const [isAdminLoggingIn, setIsAdminLoggingIn] = useState(false);
   const [isDoctorLoggingIn, setIsDoctorLoggingIn] = useState(false);
   const [isPatientLoggingIn, setIsPatientLoggingIn] = useState(false);
   const { isLoggedIn } = useAuth();
+  const { initiateLogin } = useBankingAuth();
 
   const handlePatientLoginClick = () => {
     setIsPatientLoggingIn(true);
+    initiateLogin();
   };
 
   const handleDoctorLoginClick = () => {

@@ -1,16 +1,8 @@
-import React from 'react';
 import { 
-  Mail, 
-  Lock, 
-  Eye, 
-  EyeOff, 
-  LogIn,
   Shield,
   Sparkles,
   ArrowRight,
   User,
-  Stethoscope,
-  Hospital,
   Clock
 } from 'lucide-react';
 

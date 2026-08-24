@@ -3,11 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
+ "scripts": {
+    "dev": "vite --mode development",
+    "dev:debug": "vite --mode development --debug",
     "build": "tsc -b && vite build",
+    "build:prod": "vite build --mode production",
+    "build:dev": "vite build --mode development",
+    "preview": "vite preview",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "env:check": "node -e \"console.log(require('fs').readFileSync('.env', 'utf8'))\""
   },
   "dependencies": {
     "@apollo/client": "^4.2.9",

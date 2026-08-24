@@ -6,11 +6,22 @@ import { FormContact } from '../components/FormContact';
 import { ButtonPrimary } from '../components/ButtonPrimary';
 import { TypographyAccent } from '../components/TypographyAccent';
 import { useAuth } from '../utils/AuthProvider';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useBankingAuth } from '../hooks/useBankingAuth';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 const LandingPage: React.FC = () => {
-   const { isLoggedIn, currentUser } = useAuth();
+  const { isLoggedIn, currentUser } = useAuth();
+  const { isLoading, handleCallback, initiateLogin } = useBankingAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  
+  useEffect(() => {
+    const code = searchParams.get('code');
+    if (code) {
+      handleCallback(code)
+    }
+  }, [searchParams]); 
 
   useEffect(() => {
     if (isLoggedIn && currentUser) {
@@ -40,12 +51,22 @@ const LandingPage: React.FC = () => {
     };
   }, []);
 
+  const onPatientLoginClick = () => {
+    initiateLogin();
+  }
+
   if (isLoggedIn) {
-    return null; // or a loading spinner
+    return null; 
   }
 
   return (
     <div className="font-sans text-primary-deep-blue leading-[1.6] bg-primary-white">
+      <Backdrop
+        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <img
         src="../assets/landing-banner.jpg"
         alt="Healthcare banner"
@@ -167,6 +188,7 @@ const LandingPage: React.FC = () => {
                   </div>
                   <ButtonPrimary
                     type="button"
+                    onClick={() => onPatientLoginClick()}
                     className="
                       border border-accent-purple-border 
                       text-accent-purple-border 

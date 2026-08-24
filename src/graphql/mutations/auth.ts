@@ -19,3 +19,30 @@ export const LOGIN_MUTATION: TypedDocumentNode<
   ${LOGIN_SUCCESS_FRAGMENT}
   ${LOGIN_FAILURE_FRAGMENT}
 `;
+
+export const SIGNICAT_LOGIN_MUTATION: TypedDocumentNode<
+  { loginWithSignicat: LoginResponse },
+  { signicatAccessToken: string, clientType: string }
+> = gql`
+  mutation SignicatLogin($signicatAccessToken: String!, $clientType: String) {
+    loginWithSignicat(signicatAccessToken: $signicatAccessToken, clientType: $clientType) {
+      ... on LoginSuccess {
+        ...LoginSuccessFields
+      }
+      ... on LoginFailure {
+        ...LoginFailureFields
+      }
+    }
+  }
+  ${LOGIN_SUCCESS_FRAGMENT}
+  ${LOGIN_FAILURE_FRAGMENT}
+`;
+
+export const LOGOUT_MUTATION: TypedDocumentNode<
+  { logOut: void | null },
+  Record<string, never> 
+> = gql`
+  mutation Logout {
+    logOut
+  }
+`;

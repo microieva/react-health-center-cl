@@ -29,13 +29,10 @@ export const useLogin = () => {
         return { success: true, data: data.login };
       } 
       
-      // Type guard for failure response
       if (data.login.__typename === 'LoginFailure') {
         setError(data.login.message);
         return { success: false, error: data.login.message };
       }
-      
-      // Fallback for unexpected response
       setError('Unexpected response from server');
       return { success: false, error: 'Unexpected response' };
       
