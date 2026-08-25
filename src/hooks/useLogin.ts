@@ -6,7 +6,6 @@ import { useAuth } from '../utils/AuthProvider';
 export const useLogin = () => {
   const { login } = useAuth();
   const [error, setError] = useState<string | null>(null);
-  
   const [performLogin, { loading, data, called }] = useMutation(LOGIN_MUTATION);
 
   const handleLogin = async (email: string, password: string) => {
@@ -22,20 +21,16 @@ export const useLogin = () => {
         return;
       }
 
-      // Type guard to check if it's a success response
       if (data.login.__typename === 'LoginSuccess') {
         const { token } = data.login;
         login(token, null);
         return { success: true, data: data.login };
       } 
       
-      // Type guard for failure response
       if (data.login.__typename === 'LoginFailure') {
         setError(data.login.message);
         return { success: false, error: data.login.message };
       }
-      
-      // Fallback for unexpected response
       setError('Unexpected response from server');
       return { success: false, error: 'Unexpected response' };
       

@@ -18,7 +18,6 @@ export const LoginFormPsw = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState<string | null>(null);
-
   const { login, loading, error } = useLogin();
   const navigate = useNavigate();
 
@@ -29,8 +28,7 @@ export const LoginFormPsw = () => {
     login(email, password)
       .then((response) => {
         if (response?.success) {
-          console.log('Login successful:', response.data);
-          navigate('/dashboard');
+          navigate('/auth/login');
         } else {
           setLoginError(error || 'Login failed');
         }

@@ -1,4 +1,3 @@
-// utils/AuthProvider.tsx
 import React, { createContext, useContext, useEffect } from 'react';
 import { useReactiveVar, useApolloClient } from '@apollo/client/react';
 import { currentUserVar, isLoggedInVar, setAuthState } from '../apollo/reactive-vars';
@@ -8,7 +7,7 @@ import type { User } from '../types';
 interface AuthContextType {
   isLoggedIn: boolean;
   currentUser: User | null;
-  login: (token: string, user: User | null) => Promise<void>; // Changed to accept null
+  login: (token: string, user: User | null) => Promise<void>; 
   logout: () => void;
 }
 
@@ -26,7 +25,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const currentUser = useReactiveVar(currentUserVar);
   const client = useApolloClient();
 
-  // Function to fetch user data
   const fetchUserData = async (): Promise<User | null> => {
     try {
       const { data }: { data: any } = await client.query({
@@ -40,22 +38,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Login function that handles both immediate user data or fetching it
   const login = async (token: string, user: User | null = null) => {
     localStorage.setItem('token', token);
     
     if (user) {
-      // If user data is provided, use it
       setAuthState(user);
       await client.resetStore();
     } else {
-      // If no user data, fetch it from the server
       const userData = await fetchUserData();
       if (userData) {
         setAuthState(userData);
         await client.resetStore();
       } else {
-        // If we can't fetch user data, the token might be invalid
         localStorage.removeItem('token');
         setAuthState(null);
         throw new Error('Failed to fetch user data');

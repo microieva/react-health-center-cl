@@ -6,31 +6,11 @@ import { FormContact } from '../components/FormContact';
 import { ButtonPrimary } from '../components/ButtonPrimary';
 import { TypographyAccent } from '../components/TypographyAccent';
 import { useAuth } from '../utils/AuthProvider';
-import { useNavigate } from 'react-router-dom';
+import { useBankingAuth } from '../hooks/useBankingAuth';
 
 const LandingPage: React.FC = () => {
-   const { isLoggedIn, currentUser } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isLoggedIn && currentUser) {
-      const redirectPath = getRedirectPath(currentUser.userRole);
-      navigate(redirectPath, { replace: true });
-    }
-  }, [isLoggedIn, currentUser, navigate]);
-
-  const getRedirectPath = (role?: string) => {
-    switch (role) {
-      case 'admin':
-        return '/admin/dashboard';
-      case 'doctor':
-        return '/doctor/dashboard';
-      case 'patient':
-        return '/patient/dashboard';
-      default:
-        return '/dashboard';
-    }
-  };
+  const { isLoggedIn } = useAuth();
+  const { initiateLogin } = useBankingAuth();
 
   useEffect(() => {
     const originalScrollBehavior = document.documentElement.style.scrollBehavior;
@@ -40,8 +20,12 @@ const LandingPage: React.FC = () => {
     };
   }, []);
 
+  const onPatientLoginClick = () => {
+    initiateLogin();
+  }
+
   if (isLoggedIn) {
-    return null; // or a loading spinner
+    return null; 
   }
 
   return (
@@ -167,6 +151,7 @@ const LandingPage: React.FC = () => {
                   </div>
                   <ButtonPrimary
                     type="button"
+                    onClick={() => onPatientLoginClick()}
                     className="
                       border border-accent-purple-border 
                       text-accent-purple-border 

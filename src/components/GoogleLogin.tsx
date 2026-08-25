@@ -1,28 +1,20 @@
-import React from 'react';
 import { 
-  Mail, 
-  Lock, 
-  Eye, 
-  EyeOff, 
-  LogIn,
   Shield,
   Sparkles,
   ArrowRight,
   User,
-  Stethoscope,
-  Hospital,
   Clock
 } from 'lucide-react';
+import { useGoogleAuth } from '../hooks/useGoogleAuth';
+import { Snackbar } from '@mui/material';
 
-type GoogleLoginProps = {
-  onGoogleLogin: () => void;
-  isLoading?: boolean;
-};
+const GoogleLogin = () => {
+  const { initiateLogin, isLoading, error } = useGoogleAuth();
 
-const GoogleLogin = ({ 
-  onGoogleLogin,
-  isLoading = false
-}: GoogleLoginProps) => {
+  const onGoogleLogin = () => {
+    initiateLogin();
+  }
+
   return (
     <div className="flex items-center justify-center p-4" 
          style={{ backgroundColor: '#f1f5f9' }}>
@@ -223,6 +215,14 @@ const GoogleLogin = ({
           animation: spin 1s linear infinite;
         }
       `}</style>
+      <Snackbar
+        anchorOrigin={{ horizontal: "right", vertical: "top" }}
+        open={Boolean(error)}
+        //onClose={handleCloseSnackbar}
+        message={error || "Login failed"}
+        key="topright"
+        className="bg-white text-primary-charcoal w-full py-4"
+      />
     </div>
   );
 };
