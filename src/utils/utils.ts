@@ -10,3 +10,7 @@ export const getRedirectPath = (role?: string) => {
         return '/dashboard';
     }
   };
+
+export const clearCallbackParams = (): void => {
+  window.history.replaceState({}, '', window.location.pathname);
+};

@@ -9,6 +9,7 @@ import { DoctorDashboard } from './components/dashboard/DoctorDashboard';
 import { PatientDashboard } from './components/dashboard/PatientDashboard';
 import {SignicatCallback} from './pages/SignicatCallback';
 import {GoogleCallback} from './pages/GoogleCallback';
+import { AuthLogin } from './pages/AuthLogin';
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
           {/* Authentication Callback Routes */}
           <Route path="/auth/signicat/callback" element={<SignicatCallback />} />
           <Route path="/auth/google/callback" element={<GoogleCallback />} />
+          <Route path="/auth/login" element={<AuthLogin />} />
           
           {/* Protected Routes with Layout */}
           <Route element={<Layout />}>
@@ -29,18 +31,6 @@ const App = () => {
                 <DashboardPage />
               </ProtectedRoute>
             } />
-            
-            {/* <Route path="/profile" element={
-              <ProtectedRoute>
-                <ProfilePage />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/settings" element={
-              <ProtectedRoute>
-                <SettingsPage />
-              </ProtectedRoute>
-            } /> */}
             
             {/* Role-Based Routes */}
             <Route path="/admin/*" element={

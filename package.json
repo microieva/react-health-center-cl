@@ -4,14 +4,14 @@
   "version": "0.0.0",
   "type": "module",
  "scripts": {
-    "dev": "vite --mode development",
-    "dev:debug": "vite --mode development --debug",
+    "dev": "vite --mode dev",
+    "dev:debug": "vite --mode dev --debug",
     "build": "tsc -b && vite build",
     "build:prod": "vite build --mode production",
-    "build:dev": "vite build --mode development",
+    "build:dev": "vite build --mode dev",
     "preview": "vite preview",
     "lint": "eslint .",
-    "env:check": "node -e \"console.log(require('fs').readFileSync('.env', 'utf8'))\""
+    "env:check": "node -e \"console.log(require('fs').readFileSync('.env.dev', 'utf8'))\""
   },
   "dependencies": {
     "@apollo/client": "^4.2.9",

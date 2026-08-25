@@ -6,7 +6,6 @@ import { useAuth } from '../utils/AuthProvider';
 export const useLogin = () => {
   const { login } = useAuth();
   const [error, setError] = useState<string | null>(null);
-  
   const [performLogin, { loading, data, called }] = useMutation(LOGIN_MUTATION);
 
   const handleLogin = async (email: string, password: string) => {

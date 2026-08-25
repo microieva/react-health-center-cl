@@ -1,6 +1,6 @@
 import { env, log, logError, buildSignicatAuthUrl } from '../constants';
 
-interface SignicatTokenResponse {
+export interface SignicatTokenResponse {
   access_token: string;
   token_type: string;
   expires_in: number;
@@ -43,10 +43,6 @@ export const getSignicatToken = async (code: string): Promise<SignicatTokenRespo
       },
       body: params.toString(),
     });
-
-    if (!response.ok) {
-      throw new Error(`Signicat token request failed: ${response.statusText}`);
-    }
 
     const data = await response.json();
     log('Signicat token received successfully');

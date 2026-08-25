@@ -1,6 +1,6 @@
 import { env, log, logError } from '../constants';
 
-interface GoogleTokenResponse {
+export interface GoogleTokenResponse {
   access_token: string;
   token_type: string;
   expires_in: number;
@@ -9,11 +9,10 @@ interface GoogleTokenResponse {
   id_token: string;
 }
 
-const STATE_KEY = 'google_oauth_state';
 
 export const getGoogleLoginUrl = (): string => {
   const state = generateRandomState();
-  sessionStorage.setItem(STATE_KEY, state);
+  //sessionStorage.setItem(STATE_KEY, state);
   
   const params = new URLSearchParams({
     client_id: env.googleClientId,
@@ -45,15 +44,8 @@ export const initiateGoogleLogin = (): void => {
   }
 };
 
-export const getGoogleToken = async (code: string, state: string): Promise<GoogleTokenResponse> => {
+export const getGoogleToken = async (code: string): Promise<GoogleTokenResponse> => {
   log('Fetching Google token');
-  
-  const storedState = sessionStorage.getItem(STATE_KEY);
-  if (state !== storedState) {
-    throw new Error('Invalid state parameter - possible CSRF attack');
-  }
-  
-  sessionStorage.removeItem(STATE_KEY);
   
   const tokenUrl = 'https://oauth2.googleapis.com/token';
   const params = new URLSearchParams({
@@ -73,11 +65,6 @@ export const getGoogleToken = async (code: string, state: string): Promise<Googl
       body: params.toString(),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(`Google token request failed: ${response.statusText} - ${JSON.stringify(errorData)}`);
-    }
-
     const data = await response.json();
     log('Google token received successfully');
     return data;
@@ -87,36 +74,8 @@ export const getGoogleToken = async (code: string, state: string): Promise<Googl
   }
 };
 
-// export const getGoogleUserInfo = async (accessToken: string): Promise<GoogleUserInfo> => {
-//   log('Fetching Google user info');
-  
-//   try {
-//     const response = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//     });
-
-//     if (!response.ok) {
-//       throw new Error(`Failed to get user info: ${response.statusText}`);
-//     }
-
-//     const data = await response.json();
-//     log('Google user info received');
-//     return data;
-//   } catch (error) {
-//     logError('Failed to get Google user info', error);
-//     throw error;
-//   }
-// };
-
-
 const generateRandomState = (): string => {
   const array = new Uint8Array(32);
   crypto.getRandomValues(array);
   return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-};
-
-export const clearCallbackParams = (): void => {
-  window.history.replaceState({}, '', window.location.pathname);
 };

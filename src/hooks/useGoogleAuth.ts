@@ -3,7 +3,8 @@ import { useMutation } from '@apollo/client/react';
 import { useAuth } from '../utils/AuthProvider';
 import { 
   initiateGoogleLogin, 
-  getGoogleToken
+  getGoogleToken,
+  type GoogleTokenResponse
 } from '../services/google';
 import { GOOGLE_LOGIN_MUTATION } from '../graphql/mutations/auth';
 import { env, log, logError } from '../constants';
@@ -30,42 +31,44 @@ export const useGoogleAuth = () => {
     }
   };
 
-  const handleCallback = async (code: string, state: string) => {
+  const handleCallback = async (code: string) => {
     setError(null);
     setIsLoading(true);
-    
+
+    let response: GoogleTokenResponse | null;
+
     try {
-      log('Processing Google callback');
-      const tokenResponse = await getGoogleToken(code, state);
-      log('Google token received');
-      const { data } = await performLogin({
-        variables: {
-          googleCredential: tokenResponse.id_token,
-          clientType: env.clientType,
-        },
-      });
-      
-      if (!data?.loginWithGoogle) {
-        throw new Error('No response from loginWithGoogle');
-      }
-      
-      const response = data.loginWithGoogle;
-      
-      if (response.__typename === 'LoginSuccess') {
-        const { token, user } = response;
-        login(token, user);
-      } else if (response.__typename === 'LoginFailure') {
-        setError(response.message);
-        logError('Google login failed', response.message);
-      }
-      
+      response = await getGoogleToken(code);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to complete Google login';
-      setError(errorMessage);
-      logError('Google callback failed', err);
-    } finally {
-      setIsLoading(false);
+      response = null;
+      setError("No token response from google");
+      logError('Google token response failed: ', err);
     }
+
+    if (response) {
+      try {
+        const { data } = await performLogin({
+          variables: {
+            googleCredential: response.id_token,
+            clientType: env.clientType,
+          },
+        });
+
+        if (data) {
+          if (data.loginWithGoogle.__typename === 'LoginSuccess') {
+            const { token, user } = data.loginWithGoogle;
+            login(token, user);
+          } else if (data.loginWithGoogle.__typename === 'LoginFailure') {
+            setError(data.loginWithGoogle.message);
+            logError('Google login failed', data.loginWithGoogle.message);
+          }
+        }
+      } catch (err) {
+        setError("No response from server");
+        logError('Google authentication failed: ', err);
+      }
+    }
+    setIsLoading(false);
   };
 
   return {

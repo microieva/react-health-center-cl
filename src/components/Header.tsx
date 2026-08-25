@@ -2,15 +2,22 @@ import { useEffect, useState } from "react";
 import { CustomModal } from "./Modal";
 import { LoginOptions } from "./LoginOptions";
 import { useAuth } from "../utils/AuthProvider";
+import { useLogout } from "../hooks/useLogout";
+import { Backdrop, CircularProgress, Snackbar } from "@mui/material";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const { isLoggedIn, currentUser, logout } = useAuth();
+  const { isLoggedIn, currentUser } = useAuth();
+  const { logout, isLoading, error, clearError } = useLogout();
 
   useEffect(() => {
     if (isLoggedIn) setIsLoggingIn(false);
   }, [isLoggedIn]);
+
+  const handleLogout = async () => {
+    await logout();
+  }
 
   const links = [
     ["Services", "#services"],
@@ -23,6 +30,31 @@ export const Header = () => {
 
   return (
     <header className="absolute top-0 left-0 right-0 z-[2]">
+      <Backdrop
+        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Snackbar
+        anchorOrigin={{ horizontal: "right", vertical: "top" }}
+        open={Boolean(error)}
+        onClose={clearError}
+        message={`Unexpected issue when trying to log out: ${error}`}
+        key="topright"
+        sx={{
+          '& .MuiSnackbarContent-root': {
+            backgroundColor: 'white',
+            color: 'orange',
+            fontWeight: 700,
+            fontSize: '1rem',
+            boxShadow: '0 4px 12px rgba(15, 23, 42, 0.15)',
+            paddingBlock: '1rem',
+            paddingInline: '2rem',
+            width: '30rem'
+          },
+        }}
+      />
       <div className="backdrop-blur-[18px] bg-[rgba(15,23,42,0.22)] border-b border-white-08 px-5 py-3">
         <div className="max-w-[1200px] mx-auto flex justify-between items-center">
           <div className="font-bold text-2xl text-primary-white">Health Center</div>
@@ -45,7 +77,7 @@ export const Header = () => {
             >
               Log in
             </button> : <button
-              onClick={logout}
+              onClick={handleLogout}
               type="button"
               className="border border-accent-purple-border text-primary-white bg-transparent px-[18px] py-[5px] rounded-[5px] cursor-pointer font-semibold"
             >

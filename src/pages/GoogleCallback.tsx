@@ -4,7 +4,8 @@ import { useGoogleAuth } from '../hooks/useGoogleAuth';
 import { log, logError } from '../constants';
 import { CircularProgress } from '@mui/material';
 import { useAuth } from '../utils/AuthProvider';
-import { getRedirectPath } from '../utils/utils';
+import { clearCallbackParams, getRedirectPath } from '../utils/utils';
+
 
 export const GoogleCallback: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
@@ -31,19 +32,13 @@ export const GoogleCallback: React.FC = () => {
         if (!code || !state) {
           throw new Error('Missing code or state parameters');
         }
-        await handleCallback(code, state);
-        
-        // Clear URL parameters after successful processing
-        //clearCallbackParams();
-        
-        // The handleCallback function handles navigation internally
-        // If we get here, something went wrong
-        //throw new Error('Callback processing completed but no redirect occurred');
+        await handleCallback(code);
+        clearCallbackParams();
         
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Authentication failed';
         setError(errorMessage);
-        logError('Google callback error', err);
+        logError('Google callback error: ', err);
       }
     };
 
@@ -57,7 +52,7 @@ export const GoogleCallback: React.FC = () => {
           <div className="mx-auto mb-4">
             <CircularProgress color="inherit" />
           </div>
-          <p style={{ color: '#475569' }}>Loading...</p>
+          <p style={{ color: '#475569' }}>Logging in...</p>
         </div>
       </div>
     );
