@@ -6,42 +6,11 @@ import { FormContact } from '../components/FormContact';
 import { ButtonPrimary } from '../components/ButtonPrimary';
 import { TypographyAccent } from '../components/TypographyAccent';
 import { useAuth } from '../utils/AuthProvider';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useBankingAuth } from '../hooks/useBankingAuth';
-import { Backdrop, CircularProgress } from '@mui/material';
 
 const LandingPage: React.FC = () => {
-  const { isLoggedIn, currentUser } = useAuth();
-  const { isLoading, handleCallback, initiateLogin } = useBankingAuth();
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  
-  useEffect(() => {
-    const code = searchParams.get('code');
-    if (code) {
-      handleCallback(code)
-    }
-  }, [searchParams]); 
-
-  useEffect(() => {
-    if (isLoggedIn && currentUser) {
-      const redirectPath = getRedirectPath(currentUser.userRole);
-      navigate(redirectPath, { replace: true });
-    }
-  }, [isLoggedIn, currentUser, navigate]);
-
-  const getRedirectPath = (role?: string) => {
-    switch (role) {
-      case 'admin':
-        return '/admin/dashboard';
-      case 'doctor':
-        return '/doctor/dashboard';
-      case 'patient':
-        return '/patient/dashboard';
-      default:
-        return '/dashboard';
-    }
-  };
+  const { isLoggedIn } = useAuth();
+  const { initiateLogin } = useBankingAuth();
 
   useEffect(() => {
     const originalScrollBehavior = document.documentElement.style.scrollBehavior;
@@ -61,12 +30,6 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="font-sans text-primary-deep-blue leading-[1.6] bg-primary-white">
-      <Backdrop
-        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
-        open={isLoading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
       <img
         src="../assets/landing-banner.jpg"
         alt="Healthcare banner"

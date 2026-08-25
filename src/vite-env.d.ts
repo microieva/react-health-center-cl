@@ -14,7 +14,7 @@ interface ImportMetaEnv {
   // Optional - Third-party Services
   readonly VITE_SENTRY_DSN?: string;
   readonly VITE_GOOGLE_CLIENT_ID?: string;
-  readonly VITE_GOOGLE_ANALYTICS_ID?: string;
+  readonly VITE_GOOGLE_CLIENT_SECRET?: string;
 
   // Signicat Configuration (Required)
   readonly VITE_SIGNICAT_AUTH_ENDPOINT: string;

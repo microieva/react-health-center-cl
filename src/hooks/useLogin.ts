@@ -22,7 +22,6 @@ export const useLogin = () => {
         return;
       }
 
-      // Type guard to check if it's a success response
       if (data.login.__typename === 'LoginSuccess') {
         const { token } = data.login;
         login(token, null);

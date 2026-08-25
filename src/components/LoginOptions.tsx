@@ -163,7 +163,7 @@ export const LoginOptions: React.FC = () => {
           isOpen={isDoctorLoggingIn}
           onClose={() => setIsDoctorLoggingIn(false)}
        >
-        <GoogleLogin onGoogleLogin={() => {}} />
+        <GoogleLogin />
       </CustomModal>
     </>
   );

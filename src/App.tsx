@@ -7,6 +7,8 @@ import LandingPage from './pages/LandingPage';
 import { AdminDashboard } from './components/dashboard/AdminDashboard';
 import { DoctorDashboard } from './components/dashboard/DoctorDashboard';
 import { PatientDashboard } from './components/dashboard/PatientDashboard';
+import {SignicatCallback} from './pages/SignicatCallback';
+import {GoogleCallback} from './pages/GoogleCallback';
 
 const App = () => {
   return (
@@ -15,6 +17,10 @@ const App = () => {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
+
+          {/* Authentication Callback Routes */}
+          <Route path="/auth/signicat/callback" element={<SignicatCallback />} />
+          <Route path="/auth/google/callback" element={<GoogleCallback />} />
           
           {/* Protected Routes with Layout */}
           <Route element={<Layout />}>

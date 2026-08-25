@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useMutation } from '@apollo/client/react';
-
 import { logError } from '../constants';
 import { getSignicatToken, initiateSignicatLogin } from '../services/signicat';
 import { SIGNICAT_LOGIN_MUTATION } from '../graphql/mutations/auth';
@@ -12,7 +11,7 @@ export const useBankingAuth = () => {
   const { login } = useAuth(); 
   const [performLogin, { loading: mutationLoading }] = useMutation(SIGNICAT_LOGIN_MUTATION);
 
-  const handleSignicatLogin = async () => {
+  const initiateLogin = async () => {
     setError(null);
     setIsLoading(true);
     
@@ -26,7 +25,7 @@ export const useBankingAuth = () => {
     }
   };
 
-  const handleSignicatCallback = async (code: string) => {
+  const handleCallback = async (code: string) => {
     setError(null);
     setIsLoading(true);
     
@@ -41,11 +40,10 @@ export const useBankingAuth = () => {
       });
       
       if (!data?.loginWithSignicat) {
-        throw new Error('No response from login mutation');
+        throw new Error('No response from loginWithSignicat');
       }
       if (data.loginWithSignicat.__typename === 'LoginSuccess') {
         const token = data.loginWithSignicat.token;
-
         login(token, null);
       }  
       
@@ -59,8 +57,8 @@ export const useBankingAuth = () => {
   };
 
   return {
-    initiateLogin: handleSignicatLogin,
-    handleCallback: handleSignicatCallback,
+    initiateLogin,
+    handleCallback,
     isLoading: isLoading || mutationLoading,
     error,
   };

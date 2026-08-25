@@ -1,14 +1,10 @@
-// src/constants.ts
-
-// Type definitions for environment variables
 interface EnvVariables {
-  // API
   apiUrl: string;
   graphqlEndpoint: string;
   websocketUrl: string;
   graphqlUrl: string;
   
-  // Environment
+  clientType:string;
   isDevelopment: boolean;
   isProduction: boolean;
   isTest: boolean;
@@ -16,16 +12,14 @@ interface EnvVariables {
   mode: string;
   baseUrl: string;
   
-  // App
   appName: string;
   version: string;
   
-  // Third-party
   sentryDsn?: string;
-  googleClientId?: string;
-  googleAnalyticsId?: string;
+  googleClientId: string;
+  googleClientSecret: string;
+  googleRedirectUri: string;
   
-  // Signicat
   signicatAuthEndpoint: string;
   signicatTokenEndpoint: string;
   signicatClientId: string;
@@ -60,6 +54,7 @@ const getBooleanEnv = (key: string, defaultValue: boolean = false): boolean => {
 };
 
 // Get all environment variables with defaults
+const clientType = getEnvVar('VITE_CLIENT_TYPE');
 const apiUrl = getEnvVar('VITE_API_URL', 'http://localhost:4000');
 const graphqlEndpoint = getEnvVar('VITE_GRAPHQL_ENDPOINT', '/graphql');
 const websocketUrl = getEnvVar('VITE_WEBSOCKET_URL', 'ws://localhost:4000/subscriptions');
@@ -67,7 +62,8 @@ const appName = getEnvVar('VITE_APP_NAME', 'Health Center');
 const version = getEnvVar('VITE_APP_VERSION') || '1.0.0';
 const sentryDsn = getEnvVar('VITE_SENTRY_DSN');
 const googleClientId = getEnvVar('VITE_GOOGLE_CLIENT_ID');
-const googleAnalyticsId = getEnvVar('VITE_GOOGLE_ANALYTICS_ID');
+const googleClientSecret = getEnvVar('VITE_GOOGLE_CLIENT_SECRET');
+const googleRedirectUri = getEnvVar('VITE_GOOGLE_REDIRECT_URI');
 
 // Signicat configuration (required) - now using string key
 const signicatAuthEndpoint = getEnvVar('VITE_SIGNICAT_AUTH_ENDPOINT');
@@ -95,6 +91,7 @@ export const env: EnvVariables = {
   graphqlUrl,
   
   // Environment
+  clientType,
   isDevelopment,
   isProduction,
   isTest,
@@ -106,12 +103,11 @@ export const env: EnvVariables = {
   appName,
   version,
   
-  // Third-party
   sentryDsn,
   googleClientId,
-  googleAnalyticsId,
+  googleClientSecret,
+  googleRedirectUri,
   
-  // Signicat
   signicatAuthEndpoint,
   signicatTokenEndpoint,
   signicatClientId,
@@ -120,8 +116,8 @@ export const env: EnvVariables = {
   signicatGrantType,
 };
 
-// Export individual constants for convenience
 export {
+  clientType,
   apiUrl,
   graphqlEndpoint,
   websocketUrl,
@@ -134,7 +130,8 @@ export {
   version,
   sentryDsn,
   googleClientId,
-  googleAnalyticsId,
+  googleClientSecret,
+  googleRedirectUri,
   signicatAuthEndpoint,
   signicatTokenEndpoint,
   signicatClientId,
@@ -264,5 +261,4 @@ if (isDevelopment) {
   validateEnv();
 }
 
-// Default export
 export default env;

@@ -38,6 +38,24 @@ export const SIGNICAT_LOGIN_MUTATION: TypedDocumentNode<
   ${LOGIN_FAILURE_FRAGMENT}
 `;
 
+export const GOOGLE_LOGIN_MUTATION: TypedDocumentNode<
+  { loginWithGoogle: LoginResponse },
+  { googleCredential: string, clientType: string }
+> = gql`
+  mutation GoogleLogin($googleCredential: String!, $clientType: String) {
+    loginWithGoogle(googleCredential: $googleCredential, clientType: $clientType) {
+      ... on LoginSuccess {
+        ...LoginSuccessFields
+      }
+      ... on LoginFailure {
+        ...LoginFailureFields
+      }
+    }
+  }
+  ${LOGIN_SUCCESS_FRAGMENT}
+  ${LOGIN_FAILURE_FRAGMENT}
+`;
+
 export const LOGOUT_MUTATION: TypedDocumentNode<
   { logOut: void | null },
   Record<string, never> 
