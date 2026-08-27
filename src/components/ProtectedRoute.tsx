@@ -1,8 +1,7 @@
-// components/ProtectedRoute.tsx
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../utils/AuthProvider';
-import { useLogin } from '../hooks/useLogin';
+import { CircularProgress } from '@mui/material';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -13,28 +12,25 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children, 
   allowedRoles 
 }) => {
-  const { isLoggedIn, currentUser } = useAuth();
-  const {loading} = useLogin()
+  const { isLoggedIn, currentUser, isLoading } = useAuth();
   const location = useLocation();
 
-  // Show loading state while checking auth
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+        <CircularProgress color="inherit" />
       </div>
     );
   }
 
-  // Redirect to login if not authenticated
   if (!isLoggedIn) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  // Check role-based access
-  if (allowedRoles && currentUser?.role) {
-    if (!allowedRoles.includes(currentUser.role)) {
-      // Redirect to unauthorized page or dashboard
+  if (allowedRoles && allowedRoles.length > 0) {
+    const userRole = currentUser?.userRole;
+    
+    if (!userRole || !allowedRoles.includes(userRole)) {
       return <Navigate to="/dashboard" replace />;
     }
   }

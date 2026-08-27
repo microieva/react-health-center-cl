@@ -7,10 +7,14 @@ import { ButtonPrimary } from '../components/ButtonPrimary';
 import { TypographyAccent } from '../components/TypographyAccent';
 import { useAuth } from '../utils/AuthProvider';
 import { useBankingAuth } from '../hooks/useBankingAuth';
+import { Backdrop, CircularProgress } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { getRedirectPath } from '../utils/utils';
 
 const LandingPage: React.FC = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading, currentUser } = useAuth();
   const { initiateLogin } = useBankingAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const originalScrollBehavior = document.documentElement.style.scrollBehavior;
@@ -24,12 +28,23 @@ const LandingPage: React.FC = () => {
     initiateLogin();
   }
 
-  if (isLoggedIn) {
-    return null; 
-  }
+ 
+  useEffect(() => {
+     if (isLoggedIn) {
+      const url = getRedirectPath(currentUser?.userRole);
+      navigate(url);
+    }
+  }, [navigate, isLoggedIn])
+
 
   return (
     <div className="font-sans text-primary-deep-blue leading-[1.6] bg-primary-white">
+      <Backdrop
+        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <img
         src="../assets/landing-banner.jpg"
         alt="Healthcare banner"

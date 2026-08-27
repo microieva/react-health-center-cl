@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useReactiveVar, useApolloClient } from '@apollo/client/react';
 import { currentUserVar, isLoggedInVar, setAuthState } from '../apollo/reactive-vars';
 import { GET_ME } from '../graphql/queries';
@@ -7,6 +7,7 @@ import type { User } from '../types';
 interface AuthContextType {
   isLoggedIn: boolean;
   currentUser: User | null;
+  isLoading: boolean;
   login: (token: string, user: User | null) => Promise<void>; 
   logout: () => void;
 }
@@ -14,8 +15,9 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
   currentUser: null,
+  isLoading: true,
   login: async () => {},
-  logout: () => {},
+  logout: () => {}
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -24,6 +26,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const isLoggedIn = useReactiveVar(isLoggedInVar);
   const currentUser = useReactiveVar(currentUserVar);
   const client = useApolloClient();
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchUserData = async (): Promise<User | null> => {
     try {
@@ -63,9 +66,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     client.resetStore();
   };
 
-  // On app load, attempt to rehydrate auth state
   useEffect(() => {
     const token = localStorage.getItem('token');
+    
     if (token) {
       fetchUserData()
         .then((userData) => {
@@ -79,15 +82,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .catch(() => {
           localStorage.removeItem('token');
           setAuthState(null);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
+    } else {
+      setIsLoading(false); 
     }
   }, []);
 
   const value = { 
     isLoggedIn, 
     currentUser, 
+    isLoading,
     login, 
-    logout 
+    logout
   };
 
   return (
