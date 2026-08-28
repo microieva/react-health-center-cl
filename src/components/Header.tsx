@@ -49,7 +49,7 @@ export const Header = () => {
           },
         }}
       />
-      <div className="backdrop-blur-[18px] bg-[rgba(15,23,42,0.22)] border-b border-white-08 px-5 py-3">
+      <div className="backdrop-blur-[18px] bg-[rgba(15,23,42,0.22)] border-b border-white-08 px-1 py-3">
         <div className="max-w-[1200px] mx-auto flex justify-between items-center">
           <div className="font-bold text-2xl text-primary-white">Health Center</div>
           {currentUser && (

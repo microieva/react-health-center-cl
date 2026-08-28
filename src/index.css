@@ -4,7 +4,7 @@
 
 
 /* Add this to your main CSS file (index.css, App.css, or globals.css) */
-/* :root {
+:root {
 
   --color-primary-deep-blue: #0f172a;
   --color-primary-white: #f8fafc;
@@ -43,7 +43,7 @@
   --color-gradient-blue-2: rgba(14, 165, 233, 0.14);
   --color-gradient-white: rgba(255, 255, 255, 0.35);
   --color-gradient-gray: rgba(148, 163, 184, 0.28);
-} */
+} 
 /* 
 :root {
   --text: #6b6375;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
   Drawer,
@@ -54,12 +54,13 @@ interface NavItem {
 const Layout = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [isDashboard, setIsDashboard] =  useState<boolean>(true);
   
   const { currentUser } = useAuth();
-  //const { logout, isLoading } = useLogout();
+  const location = useLocation();
   const {loading} = useLogin();
   const navigate = useNavigate();
 
@@ -95,17 +96,21 @@ const Layout = () => {
 
   const getNavItems = (): NavItem[] => {
     const baseItems: NavItem[] = [
-      { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
+      { text: 'Dashboard', icon: <PeopleIcon />, path: '/dashboard' },
+      { text: 'My Account', icon: <PeopleIcon />, path: '/account' },
     ];
 
     const roleSpecificItems: Record<string, NavItem[]> = {
-      admin: [
-        { text: 'Users', icon: <PeopleIcon />, path: '/admin/users', roles: ['admin'] },
-        { text: 'Settings', icon: <SettingsIcon />, path: '/admin/settings', roles: ['admin'] },
+      admin: [  
+        { text: 'Patients', icon: <SettingsIcon />, path: '/admin/patients', roles: ['admin'] },
+        { text: 'Doctors', icon: <SettingsIcon />, path: '/admin/doctors', roles: ['admin'] },
+        { text: 'Messages', icon: <SettingsIcon />, path: '/admin/chat', roles: ['admin'] },
+        { text: 'Feedback', icon: <SettingsIcon />, path: '/admin/feedback', roles: ['admin'] },
       ],
       doctor: [
-        { text: 'Patients', icon: <PeopleIcon />, path: '/doctor/patients', roles: ['doctor'] },
         { text: 'Appointments', icon: <CalendarIcon />, path: '/doctor/appointments', roles: ['doctor'] },
+        { text: 'Medical Records', icon: <PeopleIcon />, path: '/doctor/records ', roles: ['doctor'] },
+        { text: 'Messages', icon: <SettingsIcon />, path: '/doctor/chat', roles: ['doctor'] },
       ],
       patient: [
         { text: 'Appointments', icon: <CalendarIcon />, path: '/patient/appointments', roles: ['patient'] },
@@ -121,75 +126,38 @@ const Layout = () => {
 
   const navItems = getNavItems();
 
-  // Drawer content
   const drawer = (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column',  overflow: 'hidden', }}>
 
       {/* Navigation */}
-      <List sx={{ flex: 1, px: 2, py: 1 }}>
+      <List sx={{ flex: 1, p:0 }}>
         {navItems.map((item, index) => (
-          <ListItem key={item.text+index} disablePadding sx={{ mb: 0.5 }}>
-            <ListItemButton
-              onClick={() => handleNavigation(item.path)}
-              sx={{
-                borderRadius: 2,
-                '&.Mui-selected': {
-                  backgroundColor: 'primary.main',
-                  color: 'white',
-                  '& .MuiListItemIcon-root': {
-                    color: 'white',
+          <>
+            <ListItem key={item.text + index} disablePadding>
+              <ListItemButton
+                onClick={() => handleNavigation(item.path)}
+                sx={{
+                  '&.Mui-selected': {
+                    backgroundColor: 'var(--color-primary-slate-gray)',
+                    color: 'var(--color-primary-white)',
+                    '& .MuiListItemIcon-root': {
+                      color: 'white',
+                    },
                   },
-                },
-                '&:hover': {
-                  backgroundColor: 'primary.light',
-                  color: 'primary.main',
-                },
-              }}
-              selected={location.pathname === item.path}
-            >
-              <ListItemIcon sx={{ minWidth: 40, color: 'inherit' }}>
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
+                  '&:hover': {
+                    backgroundColor: 'var(--color-primary-slate-gray)',
+                    color: 'var(--color-primary-white)',
+                  },
+                }}
+                selected={item.path.endsWith(location.pathname) || location.pathname.endsWith(item.path)}
+              >
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+            <Divider />
+          </>
         ))}
       </List>
-
-      <Divider />
-
-      {/* Footer Actions */}
-      {/* <Box sx={{ p: 2 }}>
-        <ListItem disablePadding>
-          <ListItemButton
-            onClick={toggleTheme}
-            sx={{ borderRadius: 2 }}
-          >
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
-            </ListItemIcon>
-            <ListItemText primary={isDarkMode ? 'Light Mode' : 'Dark Mode'} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton
-            onClick={handleLogout}
-            disabled={isLoading}
-            sx={{ 
-              borderRadius: 2,
-              color: 'error.main',
-              '&:hover': {
-                backgroundColor: 'error.light',
-              }
-            }}
-          >
-            <ListItemIcon sx={{ minWidth: 40, color: 'error.main' }}>
-              <LogoutIcon />
-            </ListItemIcon>
-            <ListItemText primary={isLoading ? 'Logging out...' : 'Logout'} />
-          </ListItemButton>
-        </ListItem>
-      </Box> */}
     </Box>
   );
 
@@ -241,10 +209,11 @@ const Layout = () => {
               width: drawerWidth,
               borderRight: '1px solid',
               borderColor: 'divider',
-              top: '4rem',
-              height: `calc(100vh - 4rem)`,
+              //top: '4rem',
+              //height: `calc(100vh - 4rem)`,
               position: 'fixed', 
-              overflow: 'hidden', 
+              overflow: 'hidden',
+              marginTop: '3.6rem'
             },
           }}
           open
@@ -263,7 +232,7 @@ const Layout = () => {
           height: '100vh',
           overflowY: 'auto', 
           backgroundColor: theme.palette.background.default,
-          mt: `4rem`,
+          mt: `3rem`,
           // Hide scrollbar (optional)
           // '&::-webkit-scrollbar': { width: '8px' },
           // '&::-webkit-scrollbar-thumb': { backgroundColor: '#ccc', borderRadius: '4px' },
