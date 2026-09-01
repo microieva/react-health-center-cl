@@ -32,9 +32,10 @@ export interface FeedbacksResponse {
 export interface User {
   id: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
-  userRole?: string;
+  firstName: string;
+  lastName: string;
+  userRole: string;
+  lastLogOutAt?: string;
 }
 
 export interface LoginSuccess {

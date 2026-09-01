@@ -41,6 +41,7 @@ import { useAuth } from '../utils/AuthProvider';
 import { useLogout } from '../hooks/useLogout';
 import { Header } from './Header';
 import { useLogin } from '../hooks/useLogin';
+import { PageFooter } from './PageFooter';
 
 const drawerWidth = 280;
 
@@ -227,7 +228,7 @@ const Layout = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
+          //p: 3,
           width: { md: `calc(100% - ${drawerWidth}px)` },
           height: '100vh',
           overflowY: 'auto', 
@@ -238,7 +239,9 @@ const Layout = () => {
           // '&::-webkit-scrollbar-thumb': { backgroundColor: '#ccc', borderRadius: '4px' },
         }}
       >
-        <Outlet />
+        <div className="min-h-screen p-4 md:p-6" style={{ backgroundColor: '#f1f5f9' }}>
+          <Outlet />
+        </div>
       </Box>
     </Box>
   );
