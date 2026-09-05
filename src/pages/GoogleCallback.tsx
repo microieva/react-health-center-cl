@@ -52,7 +52,7 @@ export const GoogleCallback: React.FC = () => {
           <div className="mx-auto mb-4">
             <CircularProgress color="inherit" />
           </div>
-          <p style={{ color: '#475569' }}>Logging in...</p>
+          <p style={{ color: 'var(--color-primary-dark-gray)' }}>Logging in...</p>
         </div>
       </div>
     );
@@ -73,8 +73,8 @@ export const GoogleCallback: React.FC = () => {
             onClick={() => navigate('/')}
             className="mt-4 px-4 py-2 rounded-lg transition-all duration-200"
             style={{
-              backgroundColor: '#af6faee6',
-              color: '#ffffff'
+              backgroundColor: 'var(--color-accent-purple)',
+              color: 'var(--color-white)fff'
             }}
           >
             Return to Home

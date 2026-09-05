@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { getRedirectPath } from '../utils/utils';
 
 const LandingPage: React.FC = () => {
-  const { isLoggedIn, isLoading, currentUser } = useAuth();
+  const { currentUser, isLoading } = useAuth();
   const { initiateLogin } = useBankingAuth();
   const navigate = useNavigate();
 
@@ -30,17 +30,17 @@ const LandingPage: React.FC = () => {
 
  
   useEffect(() => {
-     if (isLoggedIn) {
+    if (!isLoading && currentUser) {
       const url = getRedirectPath(currentUser?.userRole);
       navigate(url);
     }
-  }, [navigate, isLoggedIn])
+  }, [navigate, isLoading, currentUser])
 
 
   return (
     <div className="font-sans text-primary-deep-blue leading-[1.6] bg-primary-white">
       <Backdrop
-        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+        sx={(theme) => ({ color: 'var(--color-white)', zIndex: theme.zIndex.drawer + 1 })}
         open={isLoading}
       >
         <CircularProgress color="inherit" />
@@ -169,9 +169,9 @@ const LandingPage: React.FC = () => {
                     onClick={() => onPatientLoginClick()}
                     className="
                       border border-accent-purple-border 
-                      text-accent-purple-border 
+                      text-[var(--color-accent-purple)] 
                       bg-transparent px-[18px] py-[5px] rounded-[4px] 
-                      hover:bg-accent-purple hover:text-white"
+                      hover:bg-[var(--color-accent-purple)] hover:text-white"
                   >
                     Log in
                   </ButtonPrimary>

@@ -15,10 +15,12 @@ export default {
         'primary-dark-gray': '#475569',        // Used for text
         'primary-slate-gray': '#64748b',       // Used for text
         'primary-charcoal': '#334155',         // Used for text
+        'secondary-light-blue': '#94a3b8',   // Used for 'no data' placeholdertext
 
         // Accent Colors
         'accent-purple': '#af6faee6',          // Used as main accent color for buttons, headings
         'accent-purple-border': 'rgba(175, 111, 174, 0.65)', // Used for border colors
+        
         
         // Status Colors
         'status-blue': '#0284c7',              // Used for "Get in touch" heading

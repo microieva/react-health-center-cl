@@ -20,7 +20,7 @@ export const AuthLogin = () => {
   return (
     <>
       <Backdrop
-        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+        sx={(theme) => ({ color: 'var(--color-white)', zIndex: theme.zIndex.drawer + 1 })}
         open={loading}
       >
         <CircularProgress color="inherit" />

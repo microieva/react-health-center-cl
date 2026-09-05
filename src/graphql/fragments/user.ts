@@ -7,5 +7,6 @@ export const USER_FRAGMENT = gql`
     firstName
     lastName
     userRole
+    dob
   }
 `;

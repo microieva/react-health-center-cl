@@ -11,8 +11,8 @@ export const OptionCard: React.FC<{
   const Tag = ({ text }: { text: string }) => (
     <span className="px-2 py-0.5 rounded-full text-xs text-center"
       style={{
-        backgroundColor: '#f1f5f9',
-        color: '#475569'
+        backgroundColor: 'var(--color-bg-light-blue)',
+        color: 'var(--color-primary-dark-gray)'
       }}>
       {text}
     </span>
@@ -22,15 +22,15 @@ export const OptionCard: React.FC<{
       onClick={onClick}
       className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] text-left"
       style={{
-        backgroundColor: '#ffffff',
-        borderColor: '#e2e8f0'
+        backgroundColor: 'var(--color-white)fff',
+        borderColor: 'var(--color-primary-light-gray)'
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = '#af6faee6';
+        e.currentTarget.style.borderColor = 'var(--color-accent-purple)';
         e.currentTarget.style.boxShadow = '0 8px 25px rgba(175, 111, 174, 0.12)';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = '#e2e8f0';
+        e.currentTarget.style.borderColor = 'var(--color-primary-light-gray)';
         e.currentTarget.style.boxShadow = 'none';
       }}
     >
@@ -39,7 +39,7 @@ export const OptionCard: React.FC<{
         <div className="p-4 rounded-full transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg flex-shrink-0"
             style={{
               backgroundColor: 'rgba(175, 111, 174, 0.08)',
-              color: '#af6faee6'
+              color: 'var(--color-accent-purple)'
             }}>
           {icon}
         </div>
@@ -47,10 +47,10 @@ export const OptionCard: React.FC<{
         {/* Content - Title and Description in vertical layout */}
         <div className="flex-1">
           <div className="flex flex-col gap-1">
-            <h3 className="text-xl font-semibold text-center sm:text-left" style={{ color: '#0f172a' }}>
+            <h3 className="text-xl font-semibold text-center sm:text-left" style={{ color: 'var(--color-primary-deep-blue)' }}>
               {title}
             </h3>
-            <p className="text-sm text-center sm:text-left" style={{ color: '#64748b' }}>
+            <p className="text-sm text-center sm:text-left" style={{ color: 'var(--color-primary-slate-gray)' }}>
               {description}
             </p>
           </div>
@@ -65,7 +65,7 @@ export const OptionCard: React.FC<{
 
         {/* CTA - Unchanged */}
         <div className="flex items-center gap-2 text-sm font-medium transition-all duration-300 group-hover:gap-3 flex-shrink-0"
-            style={{ color: '#af6faee6' }}>
+            style={{ color: 'var(--color-accent-purple)' }}>
           <span>Login</span>
           <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
         </div>

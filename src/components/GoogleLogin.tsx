@@ -17,7 +17,7 @@ const GoogleLogin = () => {
 
   return (
     <div className="flex items-center justify-center p-4" 
-         style={{ backgroundColor: '#f1f5f9' }}>
+         style={{ backgroundColor: 'var(--color-bg-light-blue)' }}>
       {/* Decorative gradient orbs */}
       <div className="absolute top-[-20%] right-[-10%]  rounded-full opacity-30 blur-3xl"
            style={{ background: 'radial-gradient(circle, rgba(175, 111, 174, 0.15), transparent 70%)' }} />
@@ -28,12 +28,12 @@ const GoogleLogin = () => {
       <div className="relative w-full max-w-md">
         {/* Decorative header accent */}
         <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-24 h-1 rounded-full"
-             style={{ background: 'linear-gradient(90deg, #af6faee6, rgba(175, 111, 174, 0.3))' }} />
+             style={{ background: 'linear-gradient(90deg, var(--color-accent-purple), rgba(175, 111, 174, 0.3))' }} />
 
         <div className="rounded-2xl p-8 shadow-xl border"
              style={{
-               backgroundColor: '#ffffff',
-               borderColor: '#e2e8f0',
+               backgroundColor: 'var(--color-white)fff',
+               borderColor: 'var(--color-primary-light-gray)',
                boxShadow: '0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 10px 10px -5px rgba(15, 23, 42, 0.04)'
              }}>
           
@@ -46,23 +46,23 @@ const GoogleLogin = () => {
                      borderColor: 'rgba(175, 111, 174, 0.15)',
                      border: '1px solid'
                    }}>
-                <Shield className="w-8 h-8" style={{ color: '#af6faee6' }} />
+                <Shield className="w-8 h-8" style={{ color: 'var(--color-accent-purple)' }} />
               </div>
             </div>
-            <h2 className="text-3xl font-bold mb-2" style={{ color: '#0f172a' }}>
+            <h2 className="text-3xl font-bold mb-2" style={{ color: 'var(--color-primary-deep-blue)' }}>
               Welcome Back
             </h2>
-            <p className="text-sm" style={{ color: '#475569' }}>
+            <p className="text-sm" style={{ color: 'var(--color-primary-dark-gray)' }}>
               Continue with Google to access your account
             </p>
             
             {/* Quick info badges */}
             <div className="flex justify-center gap-4 mt-4">
-              <div className="flex items-center gap-1.5 text-xs" style={{ color: '#64748b' }}>
+              <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-primary-slate-gray)' }}>
                 <Shield className="w-3.5 h-3.5" />
                 <span>Secure OAuth</span>
               </div>
-              <div className="flex items-center gap-1.5 text-xs" style={{ color: '#64748b' }}>
+              <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--color-primary-slate-gray)' }}>
                 <Clock className="w-3.5 h-3.5" />
                 <span>Quick Access</span>
               </div>
@@ -77,15 +77,15 @@ const GoogleLogin = () => {
           >
             <div className="flex items-center justify-center gap-3 w-full py-3.5 px-4 rounded-lg border-2 transition-all duration-300"
                  style={{
-                   backgroundColor: '#ffffff',
-                   borderColor: '#e2e8f0'
+                   backgroundColor: 'var(--color-white)fff',
+                   borderColor: 'var(--color-primary-light-gray)'
                  }}
                  onMouseEnter={(e) => {
-                   e.currentTarget.style.borderColor = '#af6faee6';
+                   e.currentTarget.style.borderColor = 'var(--color-accent-purple)';
                    e.currentTarget.style.boxShadow = '0 8px 25px rgba(175, 111, 174, 0.12)';
                  }}
                  onMouseLeave={(e) => {
-                   e.currentTarget.style.borderColor = '#e2e8f0';
+                   e.currentTarget.style.borderColor = 'var(--color-primary-light-gray)';
                    e.currentTarget.style.boxShadow = 'none';
                  }}>
               
@@ -112,13 +112,13 @@ const GoogleLogin = () => {
               </div>
               
               {/* Button Text */}
-              <span className="flex-1 text-sm font-medium" style={{ color: '#0f172a' }}>
+              <span className="flex-1 text-sm font-medium" style={{ color: 'var(--color-primary-deep-blue)' }}>
                 {isLoading ? 'Connecting...' : 'Continue with Google'}
               </span>
               
               {/* Arrow Icon */}
               <div className="flex-shrink-0 transition-all duration-300 group-hover:translate-x-1"
-                   style={{ color: '#64748b' }}>
+                   style={{ color: 'var(--color-primary-slate-gray)' }}>
                 <ArrowRight className="w-5 h-5" />
               </div>
             </div>
@@ -131,8 +131,8 @@ const GoogleLogin = () => {
                      backdropFilter: 'blur(2px)'
                    }}>
                 <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="#af6faee6" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="#af6faee6" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="var(--color-accent-purple)" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="var(--color-accent-purple)" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
               </div>
             )}
@@ -141,12 +141,12 @@ const GoogleLogin = () => {
           {/* Divider */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t" style={{ borderColor: '#e2e8f0' }} />
+              <div className="w-full border-t" style={{ borderColor: 'var(--color-primary-light-gray)' }} />
             </div>
             <div className="relative flex justify-center text-xs">
               <span className="px-3" style={{ 
-                backgroundColor: '#ffffff',
-                color: '#64748b'
+                backgroundColor: 'var(--color-white)fff',
+                color: 'var(--color-primary-slate-gray)'
               }}>
                 Secure OAuth 2.0 Authentication
               </span>
@@ -157,32 +157,32 @@ const GoogleLogin = () => {
           <div className="space-y-3">
             <div className="flex items-center gap-3 p-3 rounded-lg"
                  style={{
-                   backgroundColor: '#f1f5f9'
+                   backgroundColor: 'var(--color-bg-light-blue)'
                  }}>
               <div className="p-1.5 rounded-full flex-shrink-0"
                    style={{
                      backgroundColor: 'rgba(175, 111, 174, 0.08)',
-                     color: '#af6faee6'
+                     color: 'var(--color-accent-purple)'
                    }}>
                 <Shield className="w-4 h-4" />
               </div>
-              <span className="text-xs" style={{ color: '#475569' }}>
+              <span className="text-xs" style={{ color: 'var(--color-primary-dark-gray)' }}>
                 Your Google account information is securely handled
               </span>
             </div>
             
             <div className="flex items-center gap-3 p-3 rounded-lg"
                  style={{
-                   backgroundColor: '#f1f5f9'
+                   backgroundColor: 'var(--color-bg-light-blue)'
                  }}>
               <div className="p-1.5 rounded-full flex-shrink-0"
                    style={{
                      backgroundColor: 'rgba(175, 111, 174, 0.08)',
-                     color: '#af6faee6'
+                     color: 'var(--color-accent-purple)'
                    }}>
                 <User className="w-4 h-4" />
               </div>
-              <span className="text-xs" style={{ color: '#475569' }}>
+              <span className="text-xs" style={{ color: 'var(--color-primary-dark-gray)' }}>
                 No password needed - quick and secure access
               </span>
             </div>
@@ -191,11 +191,11 @@ const GoogleLogin = () => {
           {/* Footer */}
           <div className="mt-6 text-center">
             <div className="flex items-center justify-center gap-2">
-              <Sparkles className="w-3.5 h-3.5" style={{ color: '#af6faee6' }} />
-              <span className="text-xs" style={{ color: '#64748b' }}>
+              <Sparkles className="w-3.5 h-3.5" style={{ color: 'var(--color-accent-purple)' }} />
+              <span className="text-xs" style={{ color: 'var(--color-primary-slate-gray)' }}>
                 Trusted by thousands of users
               </span>
-              <Sparkles className="w-3.5 h-3.5" style={{ color: '#af6faee6' }} />
+              <Sparkles className="w-3.5 h-3.5" style={{ color: 'var(--color-accent-purple)' }} />
             </div>
           </div>
         </div>

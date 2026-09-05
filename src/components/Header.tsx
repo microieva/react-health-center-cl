@@ -67,13 +67,13 @@ export const Header = () => {
             {!isLoggedIn ? <button
               onClick={() => setIsLoggingIn(true)}
               type="button"
-              className="border border-accent-purple-border text-primary-white bg-transparent px-[18px] py-[5px] rounded-[5px] cursor-pointer font-semibold"
+              className="border border-accent-purple-border text-accent-purple bg-transparent hover:bg-accent-purple hover:text-white px-[18px] py-[5px] rounded-[5px] cursor-pointer font-semibold"
             >
               Log in
             </button> : <button
               onClick={handleLogout}
               type="button"
-              className="border border-accent-purple-border text-primary-white bg-transparent px-[18px] py-[5px] rounded-[5px] cursor-pointer font-semibold"
+              className="border border-accent-purple-border text-accent-purple bg-transparent px-[18px] py-[5px] rounded-[5px] cursor-pointer font-semibold"
             >
               Log out
             </button>}

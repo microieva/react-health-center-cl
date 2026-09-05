@@ -5,46 +5,62 @@ import { DashboardHeader } from "./DashboardHeader";
 import { DashboardTable } from "./DashboardTable";
 import { StatsGrid } from "./StatsGrid";
 import { UserProfileCard } from "./UserProfileCard";
+import { DashboardSceleton } from "./DashboardSceleton";
+import { useDoctorDashboard } from "../../hooks/useDoctorDashboard";
+import { useEffect, useState } from "react";
+import type { Appointment, PagedResponse } from "../../types";
+import { NextAppointment } from "./NextAppointment";
 
 export const DoctorDashboard = () => { 
   const {currentUser} = useAuth();
+  const {stats:data, loading} = useDoctorDashboard();
+  const [latestPatients, setLatesPatients] = useState<PagedResponse<Appointment>>({slice: [], length: 0});
+
+  useEffect(() => {
+    if (data) {
+      const combinedAppointments = [...data?.upcomingAppointments.slice, ...data?.pastAppointments.slice];
+      const total = data?.upcomingAppointments?.length + data?.pastAppointments?.length;
+      combinedAppointments.sort((a, b) => new Date(b.start).getTime() - new Date(a.start).getTime());
+      const combined = {
+        length: total,
+        slice: combinedAppointments,
+      };
+      setLatesPatients(combined);
+    }
+  }, [data?.upcomingAppointments, data?.pastAppointments]);
   
-    // Sample stats data
   const stats = [
     {
       title: 'Pending Requests',
-      value: '42',
+      value: data?.countPendingAppointments.toString(),
       icon: UserPlus,
-      color: '#f59e0b',
-      bg: 'rgba(245, 158, 11, 0.08)',
       trend: '+5%',
     },
     {
       title: 'Unread Messages',
-      value: '156',
+      value: data?.countUnreadMessages.toString(),
       icon: MessageSquare,
-      color: '#0284c7',
-      bg: 'rgba(2, 132, 199, 0.08)',
       trend: '+18%',
     },
     {
       title: 'Accepted Appointments',
-      value: '24',
+      value: data?.countUpcomingAppointments.toString(),
       icon: Star,
-      color: '#af6faee6',
-      bg: 'rgba(175, 111, 174, 0.08)',
       trend: '+12%',
     },
     {
       title: 'Missed Appointments',
-      value: '8',
+      value: data?.countMissedAppointments.toString(),
       icon: Calendar,
-      color: '#dc2626',
-      bg: 'rgba(220, 38, 38, 0.08)',
       trend: '-3%',
     },
 
   ];
+  if (loading) {
+    return (
+      <DashboardSceleton />
+    )
+  }
   return (
     <div className="max-w-7xl mx-auto">
         <DashboardHeader />
@@ -58,9 +74,7 @@ export const DoctorDashboard = () => {
                 title={stat.title} 
                 icon={stat.icon} 
                 value={stat.value} 
-                index={index} 
-                color={stat.color} 
-                bg={stat.bg}/>
+                index={index} />
             );
           })}
         </div>
@@ -68,16 +82,28 @@ export const DoctorDashboard = () => {
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
           {/* Left Column */}
-          <div className="lg:col-span-1 flex flex-col justify-between h-full">
-            <DashboardTable />
-            
+          <div className="lg:col-span-1 flex flex-col gap-2">
+            <DashboardTable data={data.drafts} />
+            <DashboardTable data={latestPatients} />
           </div>
-            
 
-          {/* Right Column - Quick Actions & Activity */}
-          <div className="space-y-2">
-            <DashboardTable />
-            
+          {/* Right Column */}
+          <div className="lg:col-span-1 space-y-2">
+          {!data.nextAppointment ? <div 
+              className="rounded-xl border border-dashed p-8 flex flex-col items-center justify-center"
+              style={{ 
+                borderColor: 'var(--color-primary-light-gray)',
+                minHeight: '200px'
+              }}
+            >
+              <p className="text-sm text-[var(--color-secondary-light-blue)]">
+                Next appointment
+              </p>
+              <p className="text-xs text-[var(--color-secondary-light-blue)]"><em>none</em></p>
+            </div> 
+            : 
+            <NextAppointment data={data.nextAppointment}/>
+          }
           </div>
         </div>
         <PageFooter role={currentUser?.userRole || ''}/>

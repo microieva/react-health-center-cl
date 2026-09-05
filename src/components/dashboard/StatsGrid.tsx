@@ -4,14 +4,12 @@ import type { ForwardRefExoticComponent, RefAttributes } from "react";
 interface Props {
   index: any;
   title: string;
-  value: string;
+  value?: string;
   trend: string;
-  color: string;
-  bg:string;
   icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
 }
 
-export const StatsGrid = ({icon, index, title, value, trend, bg}: Props) => {
+export const StatsGrid = ({icon, index, title, value = '-', trend}: Props) => {
   const Icon = icon;
   const isPositive = trend.startsWith('+');
 
@@ -20,7 +18,7 @@ export const StatsGrid = ({icon, index, title, value, trend, bg}: Props) => {
       key={index}
       className="rounded-xl p-4 md:p-3 border transition-all duration-200 hover:shadow-lg group hover:cursor-pointer"
       style={{
-        borderColor: '#e2e8f0'
+        borderColor: 'var(--color-primary-light-gray)'
       }}
     >
       <div className="flex items-center justify-between mb-3">
@@ -33,7 +31,7 @@ export const StatsGrid = ({icon, index, title, value, trend, bg}: Props) => {
           {trend}
         </span>
       </div>
-      <h3 className="text-2xl md:text-3xl font-bold" style={{ color: '#0f172a' }}>
+      <h3 className="text-2xl md:text-3xl font-bold" style={{ color: 'var(--color-primary-deep-blue)' }}>
         {value}
       </h3>
       <p className="text-xs mt-1 text-end font-bold" style={{ color: 'var(--color-primary-slate-gray)' }}>

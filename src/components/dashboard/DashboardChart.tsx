@@ -3,7 +3,7 @@ export const DashboardChart = () => {
     <div
       className="rounded-xl border overflow-hidden h-max px-6 py-20"
       style={{
-        borderColor: '#e2e8f0'
+        borderColor: 'var(--color-primary-light-gray)'
       }}
     >
       <p>There should be something more here - maybe a chart of appointment request statistics?</p>

@@ -6,7 +6,7 @@ export const ButtonPrimary: React.FC<React.ButtonHTMLAttributes<HTMLButtonElemen
       className={`
         ${props.className || ''}
         bg-accent-purple 
-        text-primary-deep-blue 
+        text-primary-white 
         px-5 py-[14px] rounded-[12px] 
         cursor-pointer 
         font-semibold 

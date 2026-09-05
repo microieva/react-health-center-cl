@@ -3,20 +3,11 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
   Drawer,
-  AppBar,
-  Toolbar,
   List,
-  Typography,
   Divider,
-  IconButton,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
-  Avatar,
-  Menu,
-  MenuItem,
-  Tooltip,
   useTheme,
   useMediaQuery,
   CssBaseline,
@@ -24,24 +15,23 @@ import {
   CircularProgress,
 } from '@mui/material';
 import {
-  Menu as MenuIcon,
+  // Menu as MenuIcon,
   //ChevronLeft as ChevronLeftIcon,
-  Dashboard as DashboardIcon,
+  // Dashboard as DashboardIcon,
   People as PeopleIcon,
   CalendarToday as CalendarIcon,
   MedicalServices as MedicalIcon,
   Settings as SettingsIcon,
-  Logout as LogoutIcon,
-  Person as PersonIcon,
-  Notifications as NotificationsIcon,
-  DarkMode as DarkModeIcon,
-  LightMode as LightModeIcon,
+  // Logout as LogoutIcon,
+  // Person as PersonIcon,
+  // Notifications as NotificationsIcon,
+  // DarkMode as DarkModeIcon,
+  // LightMode as LightModeIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../utils/AuthProvider';
-import { useLogout } from '../hooks/useLogout';
 import { Header } from './Header';
 import { useLogin } from '../hooks/useLogin';
-import { PageFooter } from './PageFooter';
+import { useLogout } from '../hooks/useLogout';
 
 const drawerWidth = 280;
 
@@ -58,11 +48,12 @@ const Layout = () => {
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-  const [isDashboard, setIsDashboard] =  useState<boolean>(true);
+  //const [isDashboard, setIsDashboard] =  useState<boolean>(true);
   
   const { currentUser } = useAuth();
   const location = useLocation();
-  const {loading} = useLogin();
+  const {loading: isLoggingIn} = useLogin();
+  const {isLoading: isLoggingOut} = useLogout();
   const navigate = useNavigate();
 
   const handleDrawerToggle = () => {
@@ -165,8 +156,8 @@ const Layout = () => {
   return (
     <Box sx={{ display: 'flex',  height: '100vh' }}>
       <Backdrop
-        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
-        open={loading}
+        sx={(theme) => ({ color: 'var(--color-white)', zIndex: theme.zIndex.drawer + 1 })}
+        open={ isLoggingIn || isLoggingOut }
       >
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -210,8 +201,6 @@ const Layout = () => {
               width: drawerWidth,
               borderRight: '1px solid',
               borderColor: 'divider',
-              //top: '4rem',
-              //height: `calc(100vh - 4rem)`,
               position: 'fixed', 
               overflow: 'hidden',
               marginTop: '3.6rem'
@@ -228,18 +217,14 @@ const Layout = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          //p: 3,
           width: { md: `calc(100% - ${drawerWidth}px)` },
           height: '100vh',
           overflowY: 'auto', 
           backgroundColor: theme.palette.background.default,
-          mt: `3rem`,
-          // Hide scrollbar (optional)
-          // '&::-webkit-scrollbar': { width: '8px' },
-          // '&::-webkit-scrollbar-thumb': { backgroundColor: '#ccc', borderRadius: '4px' },
+          mt: `3rem`
         }}
       >
-        <div className="min-h-screen p-4 md:p-6" style={{ backgroundColor: '#f1f5f9' }}>
+        <div className="min-h-screen p-4 md:p-6" style={{ backgroundColor: 'var(--color-bg-light-blue)' }}>
           <Outlet />
         </div>
       </Box>

@@ -36,6 +36,8 @@ export interface User {
   lastName: string;
   userRole: string;
   lastLogOutAt?: string;
+  createdAt: string;
+  dob: string;
 }
 
 export interface LoginSuccess {
@@ -51,3 +53,35 @@ export interface LoginFailure {
 }
 
 export type LoginResponse = LoginSuccess | LoginFailure;
+
+export interface PagedResponse<T = any> {
+  length: number;
+  slice: T[];
+}
+
+
+export interface Record {
+  id: string;
+  title: string;
+  patient: User;
+  createdAt: string;
+}
+
+export interface Appointment {
+  id: string;
+  start: string;
+  end: string;
+  patient: User;
+}
+
+
+export interface NextAppointment {
+  nextId: string;
+  nextStart: string;
+  nextEnd: string;
+  previousAppointmentDate: string;
+  recordIds: string[];
+  patient: User;
+  patientMessage: string;
+  doctorMessage: string;
+}

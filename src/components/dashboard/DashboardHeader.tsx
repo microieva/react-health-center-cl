@@ -19,15 +19,15 @@ export const DashboardHeader = () => {
     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-1 mb-2">
               {/* Left - Greeting */}
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold" style={{ color: '#0f172a' }}>
+                <h1 className="text-2xl md:text-3xl font-bold" style={{ color: 'var(--color-primary-deep-blue)' }}>
                   {capitalize(currentUser!.userRole)} Dashboard
                 </h1>
                 <div className="flex items-center gap-3 mt-1">
-                  <p className="text-sm" style={{ color: '#64748b' }}>
+                  <p className="text-sm" style={{ color: 'var(--color-primary-slate-gray)' }}>
                     {formatDate(currentDateTime)}
                   </p>
-                  <span className="text-sm" style={{ color: '#64748b' }}>•</span>
-                  <p className="text-sm font-medium" style={{ color: '#0f172a' }}>
+                  <span className="text-sm" style={{ color: 'var(--color-primary-slate-gray)' }}>•</span>
+                  <p className="text-sm font-medium" style={{ color: 'var(--color-primary-deep-blue)' }}>
                     {formatTime(currentDateTime)}
                   </p>
                 </div>
@@ -38,8 +38,8 @@ export const DashboardHeader = () => {
                 <button
                   className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
                   style={{
-                    backgroundColor: '#af6faee6',
-                    color: '#fff',
+                    backgroundColor: 'var(--color-accent-purple)',
+                    color: 'var(--color-white)',
                     boxShadow: '0 4px 15px rgba(175, 111, 174, 0.3)'
                   }}
                 >
