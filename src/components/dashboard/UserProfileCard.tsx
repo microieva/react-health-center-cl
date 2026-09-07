@@ -41,7 +41,7 @@ export const UserProfileCard = () => {
         <div className="flex flex-wrap items-center gap-4">
           {/* Online Status */}
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ backgroundColor: 'var(--color-bg-light-blue)' }}>
-            <div className={`w-2.5 h-2.5 rounded-full ${isOnline ? 'bg-green-500' : 'bg-gray-400'} animate-pulse`} />
+            <div className={`w-2.5 h-2.5 rounded-full ${isOnline ? 'bg-green-700' : 'bg-gray-400'}`} />
             <span className="text-sm font-medium" style={{ color: 'var(--color-primary-deep-blue)' }}>
               {isOnline ? 'Online' : 'Offline'}
             </span>

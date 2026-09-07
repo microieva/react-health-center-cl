@@ -97,7 +97,7 @@ export const PatientDashboard = () => {
           {/* Left Column */}
           <div className="lg:col-span-1 flex flex-col gap-2">
             <DashboardTable data={data?.records} />
-            <DashboardTable data={latestAppointments} />
+            <DashboardTable data={latestAppointments} nextAppointmentId={data.nextAppointment?.nextId}/>
           </div>
 
           {/* Right Column */}

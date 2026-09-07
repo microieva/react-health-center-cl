@@ -2,7 +2,7 @@ import React from 'react';
 
 interface DateStatusBadgeProps {
   timestamp: string;
-  showIcon?: boolean;
+  isNext?: boolean;
 }
 
 interface StatusColor {
@@ -59,27 +59,30 @@ const getDateStatusColor = (timestamp: string): StatusColor => {
 
 export const DateStatusBadge: React.FC<DateStatusBadgeProps> = ({ 
   timestamp, 
-  showIcon = false 
+  isNext 
 }) => {
   const statusColor = getDateStatusColor(timestamp);
   const { background, text, border, label } = statusColor;
 
   return (
-    <span
-      className={`px-3 py-0.2 rounded-full text-xs font-bold border inline-flex items-center gap-1`}
-      style={{ 
-        backgroundColor: background,
-        color: text,
-        borderColor: border,
-      }}
-    >
-      {showIcon && (
+    <div className="inline-flex items-center gap-1">
+      {isNext && (
         <span 
-          className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-          style={{ backgroundColor: text }}
-        />
+          className="px-3 py-0.2 border border-status-green rounded-full text-xs font-bold bg-status-green text-primary-light-gray flex-shrink-0"
+        >
+          next
+        </span>
       )}
-      {label}
-    </span>
+      <span
+        className={`px-3 py-0.2 rounded-full text-xs font-bold border `}
+        style={{ 
+          backgroundColor: background,
+          color: text,
+          borderColor: border,
+        }}
+      >
+        {label}
+      </span>
+    </div>
   );
 };

@@ -14,6 +14,7 @@ interface DashboardTableProps {
   onViewAll?: () => void;
   onRowClick?: (item: any) => void;
   emptyMessage?: string;
+  nextAppointmentId?: string | null;
 }
 
 const isUser = (item: any): item is User => {
@@ -35,6 +36,7 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
   onViewAll,
   onRowClick,
   emptyMessage = 'No items to display',
+  nextAppointmentId,
 }) => {
   const { currentUser } = useAuth();
 
@@ -185,6 +187,12 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
     return null;
   };
 
+  const isNextAppointment = (item: any): boolean => {
+    if (!isAppointment(item)) return false;
+    if (!nextAppointmentId) return false;
+    return item.id === nextAppointmentId;
+  };
+
   const handleRowClick = (item: any) => {
     if (onRowClick) {
       onRowClick(item);
@@ -242,7 +250,8 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
       </div>
 
       <div className="divide-y" style={{ borderColor: 'var(--color-primary-light-gray)' }}>
-        {tableConfig.items.map((item: any, index: any) => (
+        {tableConfig.items.map((item: any, index: any) => {;
+          return (
           <div
             key={item.id || index}
             className="px-3 py-1 flex items-center justify-between hover:bg-gray-50 transition-colors cursor-pointer"
@@ -295,11 +304,11 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               {isAppointment(item) && (
-                <DateStatusBadge timestamp={item.start} />
+                <DateStatusBadge timestamp={item.start} isNext={isNextAppointment(item)} />
               )}
             </div>
-          </div>
-        ))}
+          </div>)
+        })}
       </div>
     </div>
   );

@@ -25,6 +25,7 @@ export default {
         // Status Colors
         'status-blue': '#0284c7',              // Used for "Get in touch" heading
         'status-blue-light': '#dbeafe',        // Used for location card background
+        'status-green': 'rgb(111, 152, 127)',             // Used for "Next" badge
         
         // White/Transparent Variants
         'white-08': 'rgba(255, 255, 255, 0.08)', // Used for border bottom
