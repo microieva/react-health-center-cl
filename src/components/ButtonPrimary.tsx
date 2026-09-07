@@ -4,16 +4,14 @@ export const ButtonPrimary: React.FC<React.ButtonHTMLAttributes<HTMLButtonElemen
       {...props}
       disabled={props.disabled}
       className={`
-        ${props.className || ''}
+        
         bg-accent-purple 
-        text-primary-white 
         px-5 py-[14px] rounded-[12px] 
         cursor-pointer 
         font-semibold 
-        hover:bg-transparent
-        hover:text-accent-purple
         border border-accent-purple-border
         transition-colors duration-300 ease-in-out
+        ${props.className || ''}
         ${props.disabled ? 'opacity-70 cursor-not-allowed' : ''} 
         `
       }

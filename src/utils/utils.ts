@@ -101,4 +101,31 @@ export const clearCallbackParams = (): void => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
+  export const getTimeDuration = (startTime: string, endTime: string): string => {
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    
+    const diffMs = end.getTime() - start.getTime();
+    
+    if (diffMs <= 0) {
+      return '0 min';
+    }
+    
+    const totalMinutes = Math.floor(diffMs / 60000);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    
+    if (hours === 0) {
+      return `${minutes} min`;
+    }
+    
+    if (minutes === 0) {
+      return `${hours} hour${hours > 1 ? 's' : ''}`;
+    }
+    
+    // Pad minutes with leading zero if less than 10
+    const paddedMinutes = minutes.toString().padStart(2, '0');
+    return `${hours} hour${hours > 1 ? 's' : ''} ${paddedMinutes} min`;
+  };
+
   

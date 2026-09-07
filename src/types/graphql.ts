@@ -64,6 +64,7 @@ export interface Record {
   id: string;
   title: string;
   patient: User;
+  doctor: User;
   createdAt: string;
 }
 
@@ -72,6 +73,7 @@ export interface Appointment {
   start: string;
   end: string;
   patient: User;
+  doctor: User;
 }
 
 
@@ -82,6 +84,7 @@ export interface NextAppointment {
   previousAppointmentDate: string;
   recordIds: string[];
   patient: User;
+  doctor: User;
   patientMessage: string;
   doctorMessage: string;
 }

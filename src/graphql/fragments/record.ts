@@ -9,6 +9,11 @@ export const RECORD_FRAGMENT = gql`
       firstName
       lastName
     }
+    doctor {
+      id
+      firstName
+      lastName
+    }
     createdAt
   }
 `;

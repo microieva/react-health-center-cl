@@ -1,4 +1,3 @@
-import { Calendar, MessageSquare, Star, UserPlus } from "lucide-react";
 import { useAuth } from "../../utils/AuthProvider";
 import { PageFooter } from "../PageFooter";
 import { DashboardHeader } from "./DashboardHeader";
@@ -10,10 +9,15 @@ import { useDoctorDashboard } from "../../hooks/useDoctorDashboard";
 import { useEffect, useState } from "react";
 import type { Appointment, PagedResponse } from "../../types";
 import { NextAppointment } from "./NextAppointment";
+import { ErrorView } from "../ErrorView";
+import EventBusyRoundedIcon from '@mui/icons-material/EventBusyRounded';
+import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
+import EventNoteRoundedIcon from '@mui/icons-material/EventNoteRounded';
+import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
 
 export const DoctorDashboard = () => { 
   const {currentUser} = useAuth();
-  const {stats:data, loading} = useDoctorDashboard();
+  const {stats:data, loading, error} = useDoctorDashboard();
   const [latestPatients, setLatesPatients] = useState<PagedResponse<Appointment>>({slice: [], length: 0});
 
   useEffect(() => {
@@ -33,25 +37,25 @@ export const DoctorDashboard = () => {
     {
       title: 'Pending Requests',
       value: data?.countPendingAppointments.toString(),
-      icon: UserPlus,
+      icon: EventNoteRoundedIcon,
       trend: '+5%',
     },
     {
       title: 'Unread Messages',
       value: data?.countUnreadMessages.toString(),
-      icon: MessageSquare,
+      icon: MessageRoundedIcon,
       trend: '+18%',
     },
     {
       title: 'Accepted Appointments',
       value: data?.countUpcomingAppointments.toString(),
-      icon: Star,
+      icon: CalendarMonthRoundedIcon,
       trend: '+12%',
     },
     {
       title: 'Missed Appointments',
       value: data?.countMissedAppointments.toString(),
-      icon: Calendar,
+      icon: EventBusyRoundedIcon,
       trend: '-3%',
     },
 
@@ -60,6 +64,11 @@ export const DoctorDashboard = () => {
     return (
       <DashboardSceleton />
     )
+  }
+  if (error) {
+    return (
+      <ErrorView error={error} title={"Getting data failed"}/>
+    );
   }
   return (
     <div className="max-w-7xl mx-auto">

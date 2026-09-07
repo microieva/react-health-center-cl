@@ -1,4 +1,4 @@
-import { UserCheck, MessageCircle, Calendar, ThumbsUp, UserPlus, MessageSquare, Star } from "lucide-react";
+import { UserCheck, MessageCircle, Calendar, ThumbsUp, UserPlus } from "lucide-react";
 import { DashboardChart } from "./DashboardChart";
 import { DashboardHeader } from "./DashboardHeader";
 import { DashboardTable } from "./DashboardTable";
@@ -8,34 +8,39 @@ import { PageFooter } from "../PageFooter";
 import { useAuth } from "../../utils/AuthProvider";
 import { useAdminDashboard } from "../../hooks/useAdminDashboard";
 import { DashboardSceleton } from "./DashboardSceleton";
+import { ErrorView } from "../ErrorView";
+import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
+import ReviewsRoundedIcon from '@mui/icons-material/ReviewsRounded';
+import EventBusyRoundedIcon from '@mui/icons-material/EventBusyRounded';
+import InsertInvitationRoundedIcon from '@mui/icons-material/InsertInvitationRounded';
 
 export const AdminDashboard = () => { 
   const {currentUser} = useAuth();
-  const {stats: data, loading} = useAdminDashboard();
+  const {stats: data, loading, error} = useAdminDashboard();
   
   const stats = [
     {
       title: 'Unread Messages',
       value: data?.countUnreadMessages.toString(),
-      icon: MessageSquare,
+      icon: MessageRoundedIcon,
       trend: '+18%',
     },
     {
       title: 'Unread Feedback',
       value: data?.countUnreadFeedback.toString(),
-      icon: Star,
+      icon: ReviewsRoundedIcon,
       trend: '+12%',
     },
     {
       title: 'Missed Appointments',
       value: data?.countMissedAppointments.toString(),
-      icon: Calendar,
+      icon: EventBusyRoundedIcon,
       trend: '-3%',
     },
     {
       title: 'Pending Requests',
       value: data?.countDoctorRequests.toString(),
-      icon: UserPlus,
+      icon: InsertInvitationRoundedIcon,
       trend: '+5%',
     }
   ];
@@ -44,6 +49,11 @@ export const AdminDashboard = () => {
     return (
       <DashboardSceleton />
     )
+  }
+  if (error) {
+    return (
+      <ErrorView error={error} title={"Getting data failed"}/>
+    );
   }
 
   return (

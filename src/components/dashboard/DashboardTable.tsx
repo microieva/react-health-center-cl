@@ -1,4 +1,4 @@
-import { Calendar, FileText, MoreVertical, UserCircle } from "lucide-react"
+import { Calendar, FileText, UserCircle } from "lucide-react"
 import { formatDate, formatTime } from "../../utils/utils"
 import { useAuth } from "../../utils/AuthProvider";
 import { useMemo } from "react";
@@ -82,7 +82,7 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
         type: 'appointment' as const,
         items: data.slice as Appointment[],
         total,
-        displayFields: [
+        displayFields: currentUser?.userRole === 'doctor' ? [
           { key: 'patient', label: 'Patient', render: (item: Appointment) => `${item.patient.firstName} ${item.patient.lastName}` },
           { key: 'start', label: 'Date & Time', render: (item: Appointment) => new Date(item.start).toLocaleString() },
           { key: 'duration', label: 'Duration', render: (item: Appointment) => {
@@ -90,6 +90,14 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
             const minutes = Math.floor(duration / 60000);
             return `${minutes} min`;
           }},
+        ] : [
+          { key: 'doctor', label: 'Doctor', render: (item: Appointment) => `${item.doctor.firstName} ${item.doctor.lastName}` },
+          { key: 'start', label: 'Date & Time', render: (item: Appointment) => new Date(item.start).toLocaleString() },
+          { key: 'duration', label: 'Duration', render: (item: Appointment) => {
+            const duration = new Date(item.end).getTime() - new Date(item.start).getTime();
+            const minutes = Math.floor(duration / 60000);
+            return `${minutes} min`;
+          }}
         ],
       };
     }
@@ -109,9 +117,9 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
       case 'user':
         return 'Doctor Contracts';
       case 'record':
-        return 'Record Drafts';
+        return currentUser?.userRole === 'doctor' ? 'Record drafts': 'Latest medical records';
       case 'appointment':
-        return 'Latest Patients';
+        return currentUser?.userRole === 'doctor' ? 'Latest Patients': 'Latest appointments';
       default:
         return 'Items';
     }
@@ -126,7 +134,7 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
       case 'record':
         return 'Recently created medical record drafts';
       case 'appointment':
-        return 'Recently scheduled patients';
+        return currentUser?.userRole === 'doctor' ? 'Recently scheduled patients': 'Recent visits at the clinic'
       default:
         return '';
     }
@@ -153,7 +161,10 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
       return item.title;
     }
     if (isAppointment(item)) {
-      return `${item.patient.firstName} ${item.patient.lastName}`;
+      return currentUser?.userRole === 'doctor' ? 
+        `${item.patient.firstName} ${item.patient.lastName}`
+        : 
+        `Dr., ${item.doctor.firstName} ${item.doctor.lastName}`;
     }
     return 'Unknown';
   };
@@ -163,7 +174,10 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
       return `${formatDate(new Date(item.createdAt))}`;
     }
     if (isRecord(item)) {
-      return `${item.patient.firstName} ${item.patient.lastName}`;
+      return currentUser?.userRole === 'doctor' ? 
+        `${item.patient.firstName} ${item.patient.lastName}`
+        : 
+        `${item.doctor.firstName} ${item.doctor.lastName}`;
     }
     if (isAppointment(item)) {
       return formatDate(new Date(item.start));
@@ -254,7 +268,7 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
                         </span>
                       </>)
                       }
-                      {currentUser?.userRole === 'doctor' && isRecord(item) && (
+                      {isRecord(item) && (
                       <>
                         <span className="text-xs truncate" style={{ color: 'var(--color-primary-slate-gray)' }}>{getItemSubtext(item)}</span>
                         <span className="w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--color-primary-medium-gray)' }} />
@@ -263,7 +277,7 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
                         </span>
                       </>)
                       }
-                      {currentUser?.userRole === 'doctor' && isAppointment(item) && (
+                      {isAppointment(item) && (
                       <>
                         <span className="text-xs truncate" style={{ color: 'var(--color-primary-slate-gray)' }}>
                           {formatTime(new Date(item.start))}
@@ -283,9 +297,6 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
               {isAppointment(item) && (
                 <DateStatusBadge timestamp={item.start} />
               )}
-              <button className="p-1 rounded-lg hover:bg-gray-100 transition-colors">
-                <MoreVertical className="w-4 h-4" style={{ color: 'var(--color-secondary-light-blue)' }} />
-              </button>
             </div>
           </div>
         ))}

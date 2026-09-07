@@ -13,6 +13,11 @@ export const APPOINTMENT_FRAGMENT = gql`
           firstName
           lastName
         }
+        doctor {
+          id
+          firstName
+          lastName
+        }
       }
     }
   }

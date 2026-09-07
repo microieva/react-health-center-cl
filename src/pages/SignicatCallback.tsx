@@ -5,6 +5,7 @@ import { log, logError } from '../constants';
 import { CircularProgress } from '@mui/material';
 import { useAuth } from '../utils/AuthProvider';
 import { clearCallbackParams, getRedirectPath } from '../utils/utils';
+import { ErrorView } from '../components/ErrorView';
 
 
 export const SignicatCallback: React.FC = () => {
@@ -60,27 +61,7 @@ export const SignicatCallback: React.FC = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="max-w-md w-full p-6 rounded-lg border" style={{
-          backgroundColor: '#fee2e2',
-          borderColor: '#fecaca'
-        }}>
-          <h3 className="text-lg font-semibold mb-2" style={{ color: '#dc2626' }}>
-            Signicat Authentication Failed
-          </h3>
-          <p style={{ color: '#991b1b' }}>{error}</p>
-          <button
-            onClick={() => navigate('/')}
-            className="mt-4 px-4 py-2 rounded-lg transition-all duration-200"
-            style={{
-              backgroundColor: 'var(--color-accent-purple)',
-              color: 'var(--color-white)fff'
-            }}
-          >
-            Return to Home
-          </button>
-        </div>
-      </div>
+      <ErrorView error={error} title={"Banking authentication failed"}/>
     );
   }
 

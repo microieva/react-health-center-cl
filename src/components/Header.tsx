@@ -4,6 +4,7 @@ import { LoginOptions } from "./LoginOptions";
 import { useAuth } from "../utils/AuthProvider";
 import { useLogout } from "../hooks/useLogout";
 import { Snackbar } from "@mui/material";
+import {clsx} from "clsx";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
@@ -50,7 +51,10 @@ export const Header = () => {
         }}
       />
       <div className="backdrop-blur-[18px] bg-[rgba(15,23,42,0.22)] border-b border-white-08 px-1 py-3">
-        <div className="max-w-[1200px] mx-auto flex justify-between items-center">
+        <div className={clsx(
+            "mx-auto flex justify-between items-center",
+            isLoggedIn ? "w-full" : "max-w-[1200px]"
+          )}>
           <div className="font-bold text-2xl text-primary-white">Health Center</div>
           {currentUser && (
             <div className="text-primary-white text-sm">
@@ -73,7 +77,7 @@ export const Header = () => {
             </button> : <button
               onClick={handleLogout}
               type="button"
-              className="border border-accent-purple-border text-accent-purple bg-transparent px-[18px] py-[5px] rounded-[5px] cursor-pointer font-semibold"
+              className="border border-accent-purple-border text-accent-purple bg-transparent hover:bg-accent-purple hover:text-white px-[18px] py-[5px] rounded-[5px] cursor-pointer font-semibold"
             >
               Log out
             </button>}

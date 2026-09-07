@@ -1,23 +1,14 @@
 import type { NextAppointment as Data} from "../../types"
+import { useAuth } from "../../utils/AuthProvider";
+import { getTimeDuration } from "../../utils/utils";
 import { ButtonPrimary } from "../ButtonPrimary"
 import { DateStatusBadge } from "../DateStatusBadge"
 
 export const NextAppointment = ({data}:{data: Data}) => {
-  return (
-    <div className="rounded-xl border p-4 md:p-6" style={{ backgroundColor: 'var(--color-white)', borderColor: 'var(--color-primary-light-gray)', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.08)' }}>
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h3 className="font-semibold text-lg" style={{ color: 'var(--color-primary-deep-blue)' }}>
-            Next Appointment
-          </h3>
-          <p className="text-sm" style={{ color: 'var(--color-primary-slate-gray)' }}>
-            Upcoming scheduled appointment
-          </p>
-        </div>
-        <DateStatusBadge timestamp={data.nextStart} />
-      </div>
+  const {currentUser} = useAuth();
 
-      {/* Patient Info */}
+  const PatientInfo = () => {
+    return (
       <div className="flex items-center gap-4 mb-4 pb-4 border-b" style={{ borderColor: 'var(--color-primary-light-gray)' }}>
         <div className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold" style={{ backgroundColor: 'rgba(175, 111, 174, 0.1)', color: 'var(--color-accent-purple)' }}>
           {data?.patient?.firstName?.[0]}{data?.patient?.lastName?.[0]}
@@ -37,6 +28,47 @@ export const NextAppointment = ({data}:{data: Data}) => {
           </div>
         </div>
       </div>
+    )
+  }
+    const DoctorInfo = () => {
+    return (
+      <div className="flex items-center gap-4 mb-4 pb-4 border-b" style={{ borderColor: 'var(--color-primary-light-gray)' }}>
+        <div className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold" style={{ backgroundColor: 'rgba(175, 111, 174, 0.1)', color: 'var(--color-accent-purple)' }}>
+          {data?.doctor?.firstName?.[0]}{data?.doctor?.lastName?.[0]}
+        </div>
+        <div>
+          <p className="font-semibold text-sm" style={{ color: 'var(--color-primary-deep-blue)' }}>
+            Dr., {data?.doctor?.firstName} {data?.doctor?.lastName}
+          </p>
+          <div className="flex items-center gap-1 mt-1 text-xs">
+            <span style={{ color: 'var(--color-primary-slate-gray)' }}>
+              Appointment Duration: {getTimeDuration(data.nextStart, data.nextEnd)}
+            </span>
+            <span className="w-1 h-1 rounded-full" style={{ backgroundColor: 'var(--color-primary-medium-gray)' }} />
+            <span style={{ color: 'var(--color-primary-slate-gray)' }}>
+              Doctor ID: {data?.doctor?.id || 'N/A'}
+            </span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  return (
+    <div className="rounded-xl border p-4 md:p-6" style={{ backgroundColor: 'var(--color-white)', borderColor: 'var(--color-primary-light-gray)', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.08)' }}>
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="font-semibold text-lg" style={{ color: 'var(--color-primary-deep-blue)' }}>
+            Next Appointment
+          </h3>
+          <p className="text-sm" style={{ color: 'var(--color-primary-slate-gray)' }}>
+            Upcoming scheduled appointment
+          </p>
+        </div>
+        <DateStatusBadge timestamp={data.nextStart} />
+      </div>
+
+      {currentUser?.userRole === 'doctor' ? <PatientInfo /> : <DoctorInfo />}
+      
 
       {/* Appointment Details Grid */}
       <div className="grid grid-cols-2 gap-3 mb-4">
@@ -86,14 +118,17 @@ export const NextAppointment = ({data}:{data: Data}) => {
 
       {/* Messages Section */}
       <div className="space-y-2 mb-4">
-        {/* Patient Message */}
         <div className="flex items-start gap-2 p-2 rounded-lg" style={{ backgroundColor: 'var(--color-bg-light-blue)' }}>
-          <span className="text-xs font-medium flex-shrink-0" style={{ color: 'var(--color-primary-slate-gray)' }}>
+          {currentUser?.userRole === 'doctor' ? <span className="text-xs font-medium flex-shrink-0" style={{ color: 'var(--color-primary-slate-gray)' }}>
             Patient:
-          </span>
-          <span className="text-xs" style={{ color: 'var(--color-primary-deep-blue)' }}>
+          </span> : <span className="text-xs font-medium flex-shrink-0" style={{ color: 'var(--color-primary-slate-gray)' }}>
+            Doctor:
+          </span>}
+          {currentUser?.userRole === 'doctor' ? <span className="text-xs" style={{ color: 'var(--color-primary-deep-blue)' }}>
             {data?.patientMessage || 'No message from patient'}
-          </span>
+          </span> : <span className="text-xs" style={{ color: 'var(--color-primary-deep-blue)' }}>
+            {data?.doctorMessage || 'No message from doctor'}
+          </span>}
         </div>
 
         {/* Doctor Message */}
@@ -101,9 +136,11 @@ export const NextAppointment = ({data}:{data: Data}) => {
           <span className="text-xs font-medium flex-shrink-0" style={{ color: 'var(--color-primary-slate-gray)' }}>
             My Note:
           </span>
-          <span className="text-xs" style={{ color: 'var(--color-primary-deep-blue)' }}>
+          {currentUser?.userRole === 'doctor' ? <span className="text-xs" style={{ color: 'var(--color-primary-deep-blue)' }}>
             {data?.doctorMessage || '-'}
-          </span>
+          </span> : <span className="text-xs" style={{ color: 'var(--color-primary-deep-blue)' }}>
+            {data?.patientMessage || '-'}
+          </span>}
         </div>
       </div>
 
@@ -132,7 +169,7 @@ export const NextAppointment = ({data}:{data: Data}) => {
           <div className="mt-2 flex flex-wrap gap-1.5">
             {data.recordIds.slice(0, 3).map((id, index) => (
               <span key={index} className="px-2 py-0.5 rounded text-xs" style={{ backgroundColor: 'var(--color-primary-light-gray)', color: 'var(--color-primary-dark-gray)' }}>
-                Record #{id.slice(0, 8)}
+                Record #{id}
               </span>
             ))}
             {data.recordIds.length > 3 && (
@@ -145,8 +182,8 @@ export const NextAppointment = ({data}:{data: Data}) => {
       </div>
 
       <div className="mt-4 flex gap-3">
-        <ButtonPrimary onClick={() => {}} className="flex-1 text-xs px-4">View Patient Profile</ButtonPrimary>
-        <ButtonPrimary className="text-xs bg-transparent text-accent-purple)] hover:bg-[var(--color-accent-purple)] hover:text-[var(--color-primary-white)]">Reschedule</ButtonPrimary>
+        <ButtonPrimary onClick={() => {}} className="flex-1 text-xs px-4 text-primary-white  hover:bg-transparent hover:text-accent-purple">View Patient Profile</ButtonPrimary>
+        <ButtonPrimary className="text-xs bg-transparent text-accent-purple hover:bg-accent-purple hover:text-primary-white">Reschedule</ButtonPrimary>
       </div>
     </div>
   )

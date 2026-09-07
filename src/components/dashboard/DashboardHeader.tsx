@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { formatDate, formatTime } from "../../utils/utils"
 import { useAuth } from "../../utils/AuthProvider";
 import { capitalize } from "@mui/material"
-import { UserPlus } from "lucide-react";
+import { CalendarPlus } from "lucide-react";
 
 export const DashboardHeader = () => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
@@ -35,17 +35,19 @@ export const DashboardHeader = () => {
     
               {/* Right - Actions */}
               {currentUser?.userRole === 'patient' && <div className="flex items-center gap-3">
-                <button
-                  className="px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
-                  style={{
-                    backgroundColor: 'var(--color-accent-purple)',
-                    color: 'var(--color-white)',
-                    boxShadow: '0 4px 15px rgba(175, 111, 174, 0.3)'
-                  }}
-                >
-                  <UserPlus className="w-4 h-4" />
-                  Create Appointment
-                </button>
+                <div className="group">
+                  <button
+                    className="px-4 py-2 rounded-lg font-medium transition-all duration-400 group-hover:scale-105 hover:shadow-xl flex items-center gap-2"
+                    style={{
+                      backgroundColor: 'var(--color-accent-purple)',
+                      color: 'var(--color-white)',
+                      boxShadow: '0 4px 20px rgba(175, 111, 174, 0.5)'
+                    }}
+                  >
+                    <CalendarPlus className="w-4 h-4" />
+                    Create Appointment
+                  </button>
+                </div>
               </div> }
             </div>
   )
