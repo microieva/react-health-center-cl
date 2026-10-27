@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { USER_FRAGMENT } from './user';
 
 export const APPOINTMENT_FRAGMENT = gql`
   fragment AppointmentFields on Paged {
@@ -9,16 +10,25 @@ export const APPOINTMENT_FRAGMENT = gql`
         start
         end
         patient {
-          id
-          firstName
-          lastName
+          ...UserFields
         }
         doctor {
+          ...UserFields
+        }
+        patientMessage
+        doctorMessage
+        createdAt
+        updatedAt
+        recordId
+        record {
           id
-          firstName
-          lastName
+          createdAt
+          title
+          text
+          draft
         }
       }
     }
   }
+  ${USER_FRAGMENT}
 `;

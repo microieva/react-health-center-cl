@@ -32,18 +32,20 @@ export const clearCallbackParams = (): void => {
     });
   };
 
-  export const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Active':
-        return 'text-green-600 bg-green-50 border-green-200';
-      case 'Pending':
-        return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-      case 'Expired':
-        return 'text-red-600 bg-red-50 border-red-200';
-      default:
-        return 'text-gray-600 bg-gray-50 border-gray-200';
-    }
-  };
+  // export const getStatusColor = (status: string) => {
+  //   switch (status) {
+  //     case 'upcoming':
+  //       return 'text-green-600 bg-green-50 border-green-200';
+  //     case 'pending':
+  //       return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+  //     case 'past':
+  //       return 'text-red-600 bg-red-50 border-red-200';
+  //     default:
+  //       return 'text-gray-600 bg-gray-50 border-gray-200';
+  //   }
+  // };
+
+
 
   export const formatTimeAgo = (dateString?: string): string => {
     if (!dateString) {

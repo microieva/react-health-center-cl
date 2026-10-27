@@ -22,13 +22,29 @@ export const DoctorDashboard = () => {
 
   useEffect(() => {
     if (data) {
-      const combinedAppointments = [...data?.upcomingAppointments.slice, ...data?.pastAppointments.slice];
-      const total = data?.upcomingAppointments?.length + data?.pastAppointments?.length;
-      combinedAppointments.sort((a, b) => new Date(b.start).getTime() - new Date(a.start).getTime());
+      const combinedAppointments = [
+        ...(data?.upcomingAppointments?.slice || []),
+        ...(data?.pastAppointments?.slice || []),
+      ];
+
+      combinedAppointments.sort(
+        (a, b) => new Date(b.start).getTime() - new Date(a.start).getTime()
+      );
+
+      const seen = new Set<string>();
+      const unique = combinedAppointments.filter((appointment) => {
+        const patientId = appointment?.patient?.id;
+        if (!patientId) return false;
+        if (seen.has(patientId)) return false;
+        seen.add(patientId);
+        return true;
+      });
+
       const combined = {
-        length: total,
-        slice: combinedAppointments,
+        length: unique.length,
+        slice: unique,
       };
+
       setLatesPatients(combined);
     }
   }, [data?.upcomingAppointments, data?.pastAppointments]);
@@ -67,7 +83,7 @@ export const DoctorDashboard = () => {
   }
   if (error) {
     return (
-      <ErrorView error={error} title={"Getting data failed"}/>
+      <ErrorView error={error} title={"Getting data failed"} onRetry={()=>{}}/>
     );
   }
   return (

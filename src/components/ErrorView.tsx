@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useLogout } from "../hooks/useLogout";
 import { useAuth } from "../utils/AuthProvider";
 
-export const ErrorView = ({error, title = "Unexpected error"}: {error: any, title: string }) => {
+export const ErrorView = ({error, title = "Unexpected error", onRetry}: {error: any, title: string, onRetry: () => void}) => {
   const {isLoggedIn} = useAuth();
   const {logout} = useLogout();
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ export const ErrorView = ({error, title = "Unexpected error"}: {error: any, titl
           <h3 className="text-lg font-semibold mb-2" style={{ color: '#dc2626' }}>
             {title}
           </h3>
-          <p style={{ color: '#991b1b' }}>{error}</p>
+          <p style={{ color: '#991b1b' }}>{error.message}</p>
           <button
             onClick={() => handleClick()}
             className="mt-4 px-4 py-2 rounded-lg transition-all duration-200"
@@ -34,6 +34,16 @@ export const ErrorView = ({error, title = "Unexpected error"}: {error: any, titl
             }}
           >
             Return to Home
+          </button>
+          <button
+            onClick={() => onRetry()}
+            className="mt-4 px-4 py-2 rounded-lg transition-all duration-200"
+            style={{
+              backgroundColor: 'var(--color-accent-purple)',
+              color: 'var(--color-white)fff'
+            }}
+          >
+            Retry
           </button>
         </div>
       </div>

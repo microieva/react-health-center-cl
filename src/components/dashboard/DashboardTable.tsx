@@ -73,7 +73,7 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
         total,
         displayFields: [
           { key: 'title', label: 'Title', render: (item: Record) => item.title },
-          { key: 'patient', label: 'Patient', render: (item: Record) => `${item.patient.firstName} ${item.patient.lastName}` },
+          { key: 'patient', label: 'Patient', render: (item: Record) => `${item.patient!.firstName} ${item.patient!.lastName}` },
           { key: 'createdAt', label: 'Created', render: (item: Record) => formatDate(new Date(item.createdAt)) },
         ],
       };
@@ -93,7 +93,7 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
             return `${minutes} min`;
           }},
         ] : [
-          { key: 'doctor', label: 'Doctor', render: (item: Appointment) => `${item.doctor.firstName} ${item.doctor.lastName}` },
+          { key: 'doctor', label: 'Doctor', render: (item: Appointment) => `${item.doctor?.firstName} ${item.doctor?.lastName}` },
           { key: 'start', label: 'Date & Time', render: (item: Appointment) => new Date(item.start).toLocaleString() },
           { key: 'duration', label: 'Duration', render: (item: Appointment) => {
             const duration = new Date(item.end).getTime() - new Date(item.start).getTime();
@@ -166,7 +166,7 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
       return currentUser?.userRole === 'doctor' ? 
         `${item.patient.firstName} ${item.patient.lastName}`
         : 
-        `Dr., ${item.doctor.firstName} ${item.doctor.lastName}`;
+        `Dr., ${item.doctor?.firstName} ${item.doctor?.lastName}`;
     }
     return 'Unknown';
   };
@@ -177,9 +177,9 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
     }
     if (isRecord(item)) {
       return currentUser?.userRole === 'doctor' ? 
-        `${item.patient.firstName} ${item.patient.lastName}`
+        `${item.patient!.firstName} ${item.patient!.lastName}`
         : 
-        `${item.doctor.firstName} ${item.doctor.lastName}`;
+        `${item.doctor!.firstName} ${item.doctor!.lastName}`;
     }
     if (isAppointment(item)) {
       return formatDate(new Date(item.start));
@@ -249,7 +249,7 @@ export const DashboardTable: React.FC<DashboardTableProps> = ({
         </button>
       </div>
 
-      <div className="divide-y" style={{ borderColor: 'var(--color-primary-light-gray)' }}>
+      <div className="divide-y max-h-[14rem] overflow-y-scroll" style={{ borderColor: 'var(--color-primary-light-gray)' }}>
         {tableConfig.items.map((item: any, index: any) => {;
           return (
           <div

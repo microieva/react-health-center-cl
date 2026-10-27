@@ -96,7 +96,6 @@ export const useDoctorDashboard = (
     filterInput,
   }), [pageLimit, sortDirection, sortDirectionAppointments, sortActiveDrafts, sortActiveAppointments, filterInput]);
 
-  // Query with proper typing
   const { data, loading, error: queryError, refetch: refetchQuery } = useQuery<
     DoctorDashboardData,
     DoctorDashboardVariables,
@@ -105,7 +104,7 @@ export const useDoctorDashboard = (
     GET_DOCTOR_DASHBOARD_STATS,
     {
       variables: getVariables(currentPageIndex),
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-first',
       notifyOnNetworkStatusChange: true,
       onCompleted: (data: DoctorDashboardData) => {
         if (data) {

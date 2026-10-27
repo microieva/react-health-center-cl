@@ -63,9 +63,11 @@ export interface PagedResponse<T = any> {
 export interface Record {
   id: string;
   title: string;
-  patient: User;
-  doctor: User;
+  text: string;
+  patient: User | null;
+  doctor?: User;
   createdAt: string;
+  draft: boolean;
 }
 
 export interface Appointment {
@@ -73,7 +75,13 @@ export interface Appointment {
   start: string;
   end: string;
   patient: User;
-  doctor: User;
+  doctor?: User;
+  patientMessage?: string
+  doctorMessage?: string
+  record?: Record
+  recordId?: string
+  createdAt: string;
+  updatedAt: string;
 }
 
 
@@ -87,4 +95,30 @@ export interface NextAppointment {
   doctor: User;
   patientMessage: string;
   doctorMessage: string;
+}
+
+export interface PaginationOptions {
+  pageIndex: number;
+  pageLimit: number;
+  sortActive?: string;
+  sortDirection?: string;
+  filterInput: string | null;
+}
+
+export interface UpcomingAppointmentsResponse {
+  upcomingAppointments: PagedResponse<Appointment>;
+}
+
+export interface PendingAppointmentsResponse {
+  pendingAppointments: PagedResponse<Appointment>;
+}
+
+export interface PastAppointmentsResponse {
+  pastAppointments: PagedResponse<Appointment>;
+}
+
+export type PagedAppointmentsResponse = PendingAppointmentsResponse | UpcomingAppointmentsResponse | PastAppointmentsResponse
+
+export interface UseAppointments {
+  
 }

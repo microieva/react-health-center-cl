@@ -10,6 +10,7 @@ import {SignicatCallback} from './pages/SignicatCallback';
 import {GoogleCallback} from './pages/GoogleCallback';
 import { AuthLogin } from './pages/AuthLogin';
 import { DashboardPage } from './pages/DashboardPage';
+import {AppointmentsPage} from './pages/AppointmentsPage';
 
 const App = () => {
   return (
@@ -41,13 +42,23 @@ const App = () => {
             
             <Route path="/doctor/*" element={
               <ProtectedRoute allowedRoles={['doctor']}>
-                <DoctorDashboard />
+                 <Routes>
+                  <Route path="dashboard" element={<DoctorDashboard />} />
+                  <Route path="appointments" element={<AppointmentsPage />} />
+                  {/* <Route path="patients" element={<DoctorPatientsPage />} /> */}
+                  <Route path="*" element={<Navigate to="/doctor/dashboard" replace />} />
+                </Routes>
               </ProtectedRoute>
             } />
             
             <Route path="/patient/*" element={
               <ProtectedRoute allowedRoles={['patient']}>
-                <PatientDashboard />
+                <Routes>
+                  <Route path="dashboard" element={<PatientDashboard />} />
+                  <Route path="appointments" element={<AppointmentsPage />} />
+                  {/* <Route path="records" element={<PatientRecordsPage />} /> */}
+                  <Route path="*" element={<Navigate to="/patient/dashboard" replace />} />
+                </Routes>
               </ProtectedRoute>
             } />
           </Route>

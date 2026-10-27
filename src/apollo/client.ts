@@ -2,23 +2,18 @@ import {
   ApolloClient, 
   ApolloLink, 
   HttpLink, 
-  from,
   InMemoryCache,
 } from '@apollo/client';
 import { ErrorLink } from '@apollo/client/link/error';
 
-
-// Environment variables
 const GRAPHQL_ENDPOINT = import.meta.env.VITE_GRAPHQL_ENDPOINT || 'http://localhost:4000/graphql';
 
-// Create HTTP link
 const httpLink = new HttpLink({
   uri: GRAPHQL_ENDPOINT,
   //credentials: 'same-origin',
   credentials: 'include',
 });
 
-// Authentication link
 const authLink = new ApolloLink((operation, forward) => {
   const token = localStorage.getItem('token');
   
@@ -48,8 +43,48 @@ const errorLink = new ErrorLink((error: any) => {
 })
 
 export const client = new ApolloClient({
-  link: from([authLink, httpLink, errorLink, httpLink]),
-  cache: new InMemoryCache(),
+  link: ApolloLink.from([authLink, httpLink, errorLink, httpLink]),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          pendingAppointments: {
+            keyArgs: false, // ✅ Merge all pages
+            merge(existing, incoming) {
+              if (!existing) return incoming;
+              if (!incoming) return existing;
+              return {
+                ...incoming,
+                slice: [...(existing.slice || []), ...(incoming.slice || [])],
+              };
+            },
+          },
+          upcomingAppointments: {
+            keyArgs: false,
+            merge(existing, incoming) {
+              if (!existing) return incoming;
+              if (!incoming) return existing;
+              return {
+                ...incoming,
+                slice: [...(existing.slice || []), ...(incoming.slice || [])],
+              };
+            },
+          },
+          pastAppointments: {
+            keyArgs: false,
+            merge(existing, incoming) {
+              if (!existing) return incoming;
+              if (!incoming) return existing;
+              return {
+                ...incoming,
+                slice: [...(existing.slice || []), ...(incoming.slice || [])],
+              };
+            },
+          },
+        },
+      }, 
+    },
+  }),
   defaultOptions: {
     watchQuery: {
       fetchPolicy: 'cache-and-network',
@@ -57,7 +92,7 @@ export const client = new ApolloClient({
       notifyOnNetworkStatusChange: true,
     },
     query: {
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-first',
       errorPolicy: 'all',
     },
     mutate: {
@@ -66,7 +101,6 @@ export const client = new ApolloClient({
   },
 });
 
-// Utility functions
 export const clearCache = () => client.cache.reset();
 
 export const refetchQueries = () => client.refetchQueries({ include: 'active' });

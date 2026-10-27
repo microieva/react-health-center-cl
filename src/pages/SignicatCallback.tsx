@@ -61,7 +61,7 @@ export const SignicatCallback: React.FC = () => {
 
   if (error) {
     return (
-      <ErrorView error={error} title={"Banking authentication failed"}/>
+      <ErrorView error={error} title={"Banking authentication failed"} onRetry={()=>{}}/>
     );
   }
 

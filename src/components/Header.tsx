@@ -3,14 +3,14 @@ import { CustomModal } from "./Modal";
 import { LoginOptions } from "./LoginOptions";
 import { useAuth } from "../utils/AuthProvider";
 import { useLogout } from "../hooks/useLogout";
-import { Snackbar } from "@mui/material";
+import { Backdrop, CircularProgress, Snackbar } from "@mui/material";
 import {clsx} from "clsx";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const { isLoggedIn, currentUser } = useAuth();
-  const { logout, error, clearError } = useLogout();
+  const { logout, error, clearError, isLoading } = useLogout();
 
   useEffect(() => {
     if (isLoggedIn) setIsLoggingIn(false);
@@ -30,6 +30,13 @@ export const Header = () => {
   ];
 
   return (
+    <>
+    <Backdrop
+      sx={(theme) => ({ color: 'var(--color-white)', zIndex: theme.zIndex.drawer + 1 })}
+      open={isLoading}
+    >
+      <CircularProgress color="inherit" />
+    </Backdrop>
     <header className="fixed top-0 left-0 right-0 z-[2]">
       <Snackbar
         anchorOrigin={{ horizontal: "right", vertical: "top" }}
@@ -134,5 +141,6 @@ export const Header = () => {
         <LoginOptions />
       </CustomModal>
     </header>
+    </>
   );
 }
