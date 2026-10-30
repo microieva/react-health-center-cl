@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import {upperFirst} from 'lodash-es';
 import {
   Stepper,
   Step,
@@ -30,20 +31,22 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import { format, isToday, isThisMonth } from 'date-fns';
 import { AppointmentsSkeleton } from './AppointmentsSceleton';
 import { NoAppointmentsView } from './NoAppointmentsView';
-import type { PagedResponse, Appointment } from '../../types';
+import type { PagedResponse, Appointment as AppointmentData} from '../../types';
 import { useAuth } from '../../utils/AuthProvider';
 import { getStatusIcon } from '../../utils/helpers';
 import { getTimeDuration } from '../../utils/utils';
 import { DateStatusBadge } from '../DateStatusBadge';
 import { InputAutocomplete } from '../InputAutocomplete';
-import { InputDateRangePicker } from '../InputDateRangePicker';
-
+//import { InputDateRangePicker } from '../InputDateRangePicker';
+import { CustomModal } from '../Modal';
+import { Appointment } from './Appointment';
+  
 
 interface StepperContentProps {
   view: string;
-  data: PagedResponse<Appointment>;
+  data: PagedResponse<AppointmentData>;
   isLoading: boolean;
-  onLoadMore:() => void;
+  onLoadMore:(selectedName: string | null) => void;
   hasMore: boolean;
   newItemsStartIndex: number | null;
 }
@@ -113,8 +116,9 @@ export const StepperContent: React.FC<StepperContentProps> = ({
 }) => {
   let globalIndex = 0;
   const { currentUser } = useAuth();
-  const [appointments, setAppointments] = useState<PagedResponse<Appointment>>(data);
+  const [appointments, setAppointments] = useState<PagedResponse<AppointmentData>>(data);
   const [selectedName, setSelectedName] = useState<string | null>(null);
+  const [selectedAppointment, setSelectedAppointment] = useState<AppointmentData | null>(null);
 
   useEffect(() => {
     setAppointments(data);
@@ -160,16 +164,26 @@ export const StepperContent: React.FC<StepperContentProps> = ({
 
   const handleNameFilter = (id: string | null) => {
     if (id) {
-      const selected: Appointment[] = appointments.slice.filter((apt: Appointment) => apt.patient.id === id);
+      const selected: AppointmentData[] = appointments.slice.filter((apt: AppointmentData) => apt.patient.id === id);
+      setSelectedName(id);
       setAppointments({slice: selected, length: selected.length})
+    } else {
+      setAppointments(data);
+      setSelectedName(null);
     }
   }
 
-  const handleDateFilter = () => {
-
-  }
-
   return (
+    <>
+    <CustomModal 
+      isOpen={Boolean(selectedAppointment)}
+      onClose={() => setSelectedAppointment(null)}>
+      <Appointment
+        data={selectedAppointment as AppointmentData}
+        primaryTitle={`${upperFirst(view)} Appointment`}
+        secondaryTitle={getSecondaryTitle()}
+      />
+    </CustomModal>
     <Box sx={{ maxWidth: 1200, mx: 'auto', p: { xs: 2, md: 3 } }}>
       <div className="flex flex-row justify-between items-center">
         <Box sx={{ mb: 4 }}>
@@ -188,10 +202,10 @@ export const StepperContent: React.FC<StepperContentProps> = ({
             onChange={handleNameFilter}
             value={selectedName}
           />
-          <InputDateRangePicker 
+          {/* <InputDateRangePicker 
             value={''} 
             onChange={handleDateFilter}
-          />
+          /> */}
         </Box>
       </div>
 
@@ -271,6 +285,7 @@ export const StepperContent: React.FC<StepperContentProps> = ({
                         key={appointment.id+index.toString()}
                         data-appointment-index={currentIndex} 
                         elevation={0}
+                        onClick={() => setSelectedAppointment(appointment)}
                         sx={{
                           p: 2,
                           border: '1px solid var(--color-primary-light-gray)',
@@ -377,7 +392,7 @@ export const StepperContent: React.FC<StepperContentProps> = ({
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 2 }}>
           <Button
             variant="outlined"
-            onClick={onLoadMore}
+            onClick={() => onLoadMore(selectedName)}
             disabled={isLoading}
             startIcon={isLoading ? <CircularProgress size={16} color="inherit"/> : <ExpandMore />}
             sx={{
@@ -395,5 +410,6 @@ export const StepperContent: React.FC<StepperContentProps> = ({
         </Box>
       )}
     </Box>
+  </>
   );
 };

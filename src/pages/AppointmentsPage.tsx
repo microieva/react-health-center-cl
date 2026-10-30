@@ -39,11 +39,11 @@ export const AppointmentsPage = () => {
     setPageIndex(0);
   };
 
-  const handleLoadMore = async () => {
+  const handleLoadMore = async (selectedName: string | null) => {
     const nextPageIndex = pageIndex + 1;
     const currentLength = current.data.slice.length;
     setNewItemsStartIndex(currentLength);
-
+    console.log('SELECTED NAME: ', selectedName);
     try {
       switch (view) {
         case 'pending':

@@ -30,7 +30,7 @@ export const NextAppointment = ({data}:{data: Data}) => {
       </div>
     )
   }
-    const DoctorInfo = () => {
+  const DoctorInfo = () => {
     return (
       <div className="flex items-center gap-4 mb-4 pb-4 border-b" style={{ borderColor: 'var(--color-primary-light-gray)' }}>
         <div className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold" style={{ backgroundColor: 'rgba(175, 111, 174, 0.1)', color: 'var(--color-accent-purple)' }}>
@@ -148,9 +148,11 @@ export const NextAppointment = ({data}:{data: Data}) => {
       <div className="p-3 rounded-lg border" style={{ borderColor: 'var(--color-primary-light-gray)', backgroundColor: '#fafbfc' }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium" style={{ color: 'var(--color-primary-slate-gray)' }}>
-              Associated Records:
-            </span>
+            {currentUser?.userRole === 'doctor' ? <span className="text-xs font-medium" style={{ color: 'var(--color-primary-slate-gray)' }}>
+              Patient Records:
+            </span> : <span className="text-xs font-medium" style={{ color: 'var(--color-primary-slate-gray)' }}>
+              Medical Records:
+            </span>}
             <span className="text-sm font-medium" style={{ color: 'var(--color-primary-deep-blue)' }}>
               {data?.recordIds?.length || 0}
             </span>
