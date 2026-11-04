@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import {
   usePendingAppointments,
   usePastAppointments,
-  useUpcomingAppointments,
+  useUpcomingAppointments
 } from '../hooks/useAppointments';
 import { StepperContent } from '../components/appointments/StepperContent';
 import { useAuth } from '../utils/AuthProvider';

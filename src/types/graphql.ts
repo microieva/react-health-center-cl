@@ -71,7 +71,7 @@ export interface Record {
 }
 
 export interface Appointment {
-  id: string;
+  id: string | number;
   start: string;
   end: string;
   patient: User;

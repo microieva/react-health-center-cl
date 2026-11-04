@@ -52,7 +52,7 @@ export const AdminDashboard = () => {
   }
   if (error) {
     return (
-      <ErrorView error={error} title={"Getting data failed"}/>
+      <ErrorView error={error} title={"Getting data failed"} onRetry={() => {}} />
     );
   }
 

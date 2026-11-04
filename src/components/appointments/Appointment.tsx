@@ -1,11 +1,19 @@
 import type { Appointment as Data} from "../../types"
 import { useAuth } from "../../utils/AuthProvider";
 import { getTimeDuration } from "../../utils/utils";
-import { ButtonPrimary } from "../ButtonPrimary"
-import { DateStatusBadge } from "../DateStatusBadge"
+import { ButtonPrimary } from "../ButtonPrimary";
+import { DateStatusBadge } from "../DateStatusBadge";
+import { useAcceptAppointment } from '../../hooks/useAppointments';
+import { CircularProgress } from "@mui/material";
 
-export const Appointment = ({data, primaryTitle, secondaryTitle}:{data: Data, primaryTitle: string, secondaryTitle: string}) => {
+export const Appointment = ({
+  data, 
+  primaryTitle, 
+  secondaryTitle, 
+  onAcceptAppointment
+}:{data: Data, primaryTitle: string, secondaryTitle: string, onAcceptAppointment: () => void}) => {
   const {currentUser} = useAuth();
+  const {loading: acceptLoading, error, isSuccess} = useAcceptAppointment();
 
   const PatientInfo = () => {
     return (
@@ -53,6 +61,7 @@ export const Appointment = ({data, primaryTitle, secondaryTitle}:{data: Data, pr
       </div>
     )
   }
+
   return (
     <div 
       className="rounded-xl border p-4 md:p-6 " 
@@ -108,6 +117,11 @@ export const Appointment = ({data, primaryTitle, secondaryTitle}:{data: Data, pr
             }) : 'N/A'}
           </p>
         </div>
+        {/* <div className="h-[2rem] w-[6rem] my-auto rounded-[20rem] bg-accent-purple" >
+          <p className="text-xs font-medium text-center" style={{ color: 'var(--color-primary-white)', lineHeight: '2rem' }}>
+            Reschedule
+          </p>
+        </div> */}
       </div>
 
       {/* Appointment dates */}
@@ -202,7 +216,16 @@ export const Appointment = ({data, primaryTitle, secondaryTitle}:{data: Data, pr
 
       <div className="mt-4 flex gap-3">
         <ButtonPrimary onClick={() => {}} className="flex-1 text-xs px-4 text-primary-white  hover:bg-transparent hover:text-accent-purple">View Patient Profile</ButtonPrimary>
-        <ButtonPrimary className="text-xs bg-transparent text-accent-purple hover:bg-accent-purple hover:text-primary-white">Reschedule</ButtonPrimary>
+        {currentUser?.userRole === 'doctor' && primaryTitle.includes('Upcoming')  && <ButtonPrimary 
+          className="text-xs bg-transparent text-accent-purple hover:bg-accent-purple hover:text-primary-white">
+            Reschedule
+        </ButtonPrimary>}
+        {currentUser?.userRole === 'doctor' && !data.doctor  && 
+        <ButtonPrimary 
+          onClick={onAcceptAppointment}
+          className="min-w-[60%] text-center gap-2 text-sm bg-transparent text-accent-purple hover:bg-accent-purple hover:text-primary-white">
+            {acceptLoading && <CircularProgress color="inherit" size={14} />} Accept Appointment
+        </ButtonPrimary>}
       </div>
     </div>
   )

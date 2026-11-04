@@ -11,9 +11,7 @@ import {
   Chip,
   Avatar,
   Button,
-  CircularProgress,
-  Autocomplete,
-  TextField,
+  CircularProgress
 } from '@mui/material';
 import {
   CalendarToday,
@@ -40,6 +38,7 @@ import { InputAutocomplete } from '../InputAutocomplete';
 //import { InputDateRangePicker } from '../InputDateRangePicker';
 import { CustomModal } from '../Modal';
 import { Appointment } from './Appointment';
+import { useAcceptAppointment } from '../../hooks/useAppointments';
   
 
 interface StepperContentProps {
@@ -51,13 +50,13 @@ interface StepperContentProps {
   newItemsStartIndex: number | null;
 }
 
-const groupAppointmentsByMonth = (appointments: any[]) => {
+const groupAppointmentsByMonth = (appointments: AppointmentData[]) => {
   const groups: { [key: string]: any[] } = {};
-  
+
   appointments.forEach((appointment) => {
     const date = new Date(appointment.start);
     let key: string;
-    
+
     if (isToday(date)) {
       key = 'Today';
     } else if (isThisMonth(date)) {
@@ -65,24 +64,30 @@ const groupAppointmentsByMonth = (appointments: any[]) => {
     } else {
       key = format(date, 'MMMM yyyy');
     }
-    
+
     if (!groups[key]) {
       groups[key] = [];
     }
     groups[key].push(appointment);
   });
-  
+
+  Object.values(groups).forEach((list) =>
+    list.sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+  );
+
   const sortedKeys = Object.keys(groups).sort((a, b) => {
-    if (a === 'Today') return -1;
-    if (b === 'Today') return 1;
-    if (a === 'This Month') return -1;
-    if (b === 'This Month') return 1;
-    
-    const dateA = new Date(a);
-    const dateB = new Date(b);
-    return dateB.getTime() - dateA.getTime();
+    // "Today" and "This Month" always come first
+    const priority = (k: string) => (k === 'Today' ? 0 : k === 'This Month' ? 1 : 2);
+    const pa = priority(a);
+    const pb = priority(b);
+    if (pa !== pb) return pa - pb;
+
+    const minStart = (key: string) =>
+      Math.min(...groups[key].map((ap) => new Date(ap.start).getTime()));
+
+    return minStart(a) - minStart(b); 
   });
-  
+
   return { groups, sortedKeys };
 };
 
@@ -119,10 +124,17 @@ export const StepperContent: React.FC<StepperContentProps> = ({
   const [appointments, setAppointments] = useState<PagedResponse<AppointmentData>>(data);
   const [selectedName, setSelectedName] = useState<string | null>(null);
   const [selectedAppointment, setSelectedAppointment] = useState<AppointmentData | null>(null);
+  const {acceptAppointment, isSuccess} = useAcceptAppointment();
 
   useEffect(() => {
     setAppointments(data);
   }, [data, view]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setSelectedAppointment(null);
+    }
+  }, [isSuccess]);
 
   const { groups, sortedKeys } = useMemo(() => {
     return groupAppointmentsByMonth(appointments.slice || []);
@@ -173,8 +185,15 @@ export const StepperContent: React.FC<StepperContentProps> = ({
     }
   }
 
+  const handleAcceptAppointment = async () => {
+    const response = await acceptAppointment(selectedAppointment?.id as number);
+    if (response?.success) {
+      setSelectedAppointment(null);
+    }
+  }
+
   return (
-    <>
+  <>
     <CustomModal 
       isOpen={Boolean(selectedAppointment)}
       onClose={() => setSelectedAppointment(null)}>
@@ -182,6 +201,7 @@ export const StepperContent: React.FC<StepperContentProps> = ({
         data={selectedAppointment as AppointmentData}
         primaryTitle={`${upperFirst(view)} Appointment`}
         secondaryTitle={getSecondaryTitle()}
+        onAcceptAppointment={async () => handleAcceptAppointment()}
       />
     </CustomModal>
     <Box sx={{ maxWidth: 1200, mx: 'auto', p: { xs: 2, md: 3 } }}>
