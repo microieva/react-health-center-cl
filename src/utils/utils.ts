@@ -1,3 +1,5 @@
+import { startOfWeek, endOfWeek, format } from 'date-fns';
+
 export const getRedirectPath = (role?: string) => {
     switch (role) {
       case 'admin':
@@ -129,5 +131,15 @@ export const clearCallbackParams = (): void => {
     const paddedMinutes = minutes.toString().padStart(2, '0');
     return `${hours} hour${hours > 1 ? 's' : ''} ${paddedMinutes} min`;
   };
+
+// ISO week starting Monday; use weekStartsOn: 0 for Sunday
+export const getWeekKey = (date: Date) => {
+  const start = startOfWeek(date, { weekStartsOn: 1 });
+  const end = endOfWeek(date, { weekStartsOn: 1 });
+  return `${format(start, 'MMM d')} – ${format(end, 'MMM d')}`;
+};
+
+export const getWeekSortValue = (date: Date) =>
+  startOfWeek(date, { weekStartsOn: 1 }).getTime();
 
   

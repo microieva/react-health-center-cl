@@ -101,6 +101,7 @@ export const client = new ApolloClient({
   },
 });
 
+
 export const clearCache = () => client.cache.reset();
 
 export const refetchQueries = () => client.refetchQueries({ include: 'active' });

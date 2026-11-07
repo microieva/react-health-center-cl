@@ -12,7 +12,7 @@ export const ButtonPrimary: React.FC<React.ButtonHTMLAttributes<HTMLButtonElemen
         border border-accent-purple-border
         transition-colors duration-300 ease-in-out
         ${props.className || ''}
-        ${props.disabled ? 'opacity-70 cursor-not-allowed' : ''} 
+        ${props.disabled ? 'opacity-70 cursor-default' : 'cursor-pointer hover:bg-transparent hover:text-accent-purple'} 
         `
       }
     >

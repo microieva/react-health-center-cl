@@ -1,6 +1,6 @@
 import { gql, type TypedDocumentNode } from "@apollo/client";
-import { APPOINTMENT_FRAGMENT } from "../fragments/appointment";
-import type { PaginationOptions, PastAppointmentsResponse, PendingAppointmentsResponse, UpcomingAppointmentsResponse } from "../../types";
+import { APPOINTMENT_FRAGMENT, NEXT_APPOINTMENT_FRAGMENT } from "../fragments/appointment";
+import type { NextAppointment, PaginationOptions, PastAppointmentsResponse, PendingAppointmentsResponse, UpcomingAppointmentsResponse } from "../../types";
 
 export const COUNT_MISSED_APPOINTMENTS: TypedDocumentNode<
   {countMissedAppointments: number},
@@ -102,3 +102,16 @@ export const GET_UPCOMING_APPOINTMENTS: TypedDocumentNode<
     }
   }
   ${APPOINTMENT_FRAGMENT}`;
+
+
+  export const GET_NEXT_APPOINTMENT: TypedDocumentNode<
+  { nextAppointment: NextAppointment | null },
+  Record<string, never>
+> = gql`
+  query GetNextAppointment {
+    nextAppointment {
+      ...NextAppointmentFragment
+    }
+  }
+  ${NEXT_APPOINTMENT_FRAGMENT}
+`;

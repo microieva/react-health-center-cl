@@ -43,7 +43,6 @@ export const AppointmentsPage = () => {
     const nextPageIndex = pageIndex + 1;
     const currentLength = current.data.slice.length;
     setNewItemsStartIndex(currentLength);
-    console.log('SELECTED NAME: ', selectedName);
     try {
       switch (view) {
         case 'pending':
@@ -122,9 +121,9 @@ export const AppointmentsPage = () => {
           )}
         </div>
       </div>
-    <Box ref={listRef} sx={{ maxWidth: 1200, mx: 'auto', p: { xs: 2, md: 3 } }}>
+    <Box ref={listRef} sx={{ maxWidth: 1200, mx: 'auto' }}>
       {/* View Tabs */}
-      <Box sx={{  display: 'flex', gap: 1 }}>
+      <Box sx={{  display: 'flex', gap: 1, borderBottom: '0.5px solid var(--color-primary-medium-gray)', pb: 4 }}>
         {(['pending', 'upcoming', 'past'] as ViewType[]).map((viewType) => (
           <button
             key={viewType}

@@ -64,7 +64,9 @@ export const NextAppointment = ({data}:{data: Data}) => {
             Upcoming scheduled appointment
           </p>
         </div>
-        <DateStatusBadge timestamp={data.nextStart} />
+        <div>
+          <DateStatusBadge timestamp={data.nextStart} isNext={true} />
+        </div>
       </div>
 
       {currentUser?.userRole === 'doctor' ? <PatientInfo /> : <DoctorInfo />}

@@ -5,6 +5,7 @@ import { ButtonPrimary } from "../ButtonPrimary";
 import { DateStatusBadge } from "../DateStatusBadge";
 import { useAcceptAppointment } from '../../hooks/useAppointments';
 import { CircularProgress } from "@mui/material";
+import { useState } from "react";
 
 export const Appointment = ({
   data, 
@@ -14,6 +15,9 @@ export const Appointment = ({
 }:{data: Data, primaryTitle: string, secondaryTitle: string, onAcceptAppointment: () => void}) => {
   const {currentUser} = useAuth();
   const {loading: acceptLoading, error, isSuccess} = useAcceptAppointment();
+  const [isRescheduling, setIsRescheduling] = useState(false);
+  const [draftStart, setDraftStart] = useState<string>('');
+  const [draftEnd, setDraftEnd] = useState<string>('');
 
   const PatientInfo = () => {
     return (
@@ -62,6 +66,27 @@ export const Appointment = ({
     )
   }
 
+  const toLocalInput = (iso?: string) => {
+    if (!iso) return '';
+    const d = new Date(iso);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  };
+
+  const startEditing = () => {
+    setDraftStart(toLocalInput(data?.start));
+    setDraftEnd(toLocalInput(data?.end));
+    setIsRescheduling(true);
+  };
+
+  const cancelEditing = () => setIsRescheduling(false);
+
+  const saveReschedule = async () => {
+    // TODO: call your API here, e.g.:
+    // await rescheduleAppointment(data.id, { start: toIso(draftStart), end: toIso(draftEnd) });
+    setIsRescheduling(false);
+  };
+
   return (
     <div 
       className="rounded-xl border p-4 md:p-6 " 
@@ -87,41 +112,50 @@ export const Appointment = ({
       {currentUser?.userRole === 'doctor' ? <PatientInfo /> : <DoctorInfo />}
       
 
-      {/* Appointment Details Grid */}
+      {/* Appointment time details */}
       <div className="grid grid-cols-2 gap-3 mb-4">
         <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-bg-light-blue)' }}>
           <p className="text-xs font-medium" style={{ color: 'var(--color-primary-slate-gray)' }}>
             Start Time
           </p>
-          <p className="font-semibold text-sm" style={{ color: 'var(--color-primary-deep-blue)' }}>
-            {data?.start ? new Date(data.start).toLocaleString('en-US', {
-              weekday: 'short',
-              month: 'short',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            }) : 'N/A'}
-          </p>
+          {isRescheduling ? (
+              <input
+                type="datetime-local"
+                value={draftStart}
+                onChange={(e) => setDraftStart(e.target.value)}
+                className="w-full bg-transparent font-semibold text-sm outline-none border-b border-primary-light-gray focus:border-accent-purple"
+                style={{ color: 'var(--color-primary-deep-blue)' }}
+              />
+            ) : (
+              <p className="font-semibold text-sm" style={{ color: 'var(--color-primary-deep-blue)' }}>
+                {data?.start ? new Date(data.start).toLocaleString('en-US', {
+                  weekday: 'short', month: 'short', day: 'numeric',
+                  hour: '2-digit', minute: '2-digit',
+                }) : 'N/A'}
+              </p>
+            )}
         </div>
         <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-bg-light-blue)' }}>
           <p className="text-xs font-medium" style={{ color: 'var(--color-primary-slate-gray)' }}>
             End Time
           </p>
-          <p className="font-semibold text-sm" style={{ color: 'var(--color-primary-deep-blue)' }}>
-            {data?.end ? new Date(data.end).toLocaleString('en-US', {
-              weekday: 'short',
-              month: 'short',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            }) : 'N/A'}
-          </p>
+            {isRescheduling ? (
+              <input
+                type="datetime-local"
+                value={draftEnd}
+                onChange={(e) => setDraftEnd(e.target.value)}
+                className="w-full bg-transparent font-semibold text-sm outline-none border-b border-primary-light-gray focus:border-accent-purple"
+                style={{ color: 'var(--color-primary-deep-blue)' }}
+              />
+            ) : (
+              <p className="font-semibold text-sm" style={{ color: 'var(--color-primary-deep-blue)' }}>
+                {data?.end ? new Date(data.end).toLocaleString('en-US', {
+                  weekday: 'short', month: 'short', day: 'numeric',
+                  hour: '2-digit', minute: '2-digit',
+                }) : 'N/A'}
+              </p>
+            )}
         </div>
-        {/* <div className="h-[2rem] w-[6rem] my-auto rounded-[20rem] bg-accent-purple" >
-          <p className="text-xs font-medium text-center" style={{ color: 'var(--color-primary-white)', lineHeight: '2rem' }}>
-            Reschedule
-          </p>
-        </div> */}
       </div>
 
       {/* Appointment dates */}
@@ -213,20 +247,52 @@ export const Appointment = ({
           </div>
         )}
       </div>
-
       <div className="mt-4 flex gap-3">
-        <ButtonPrimary onClick={() => {}} className="flex-1 text-xs px-4 text-primary-white  hover:bg-transparent hover:text-accent-purple">View Patient Profile</ButtonPrimary>
-        {currentUser?.userRole === 'doctor' && primaryTitle.includes('Upcoming')  && <ButtonPrimary 
-          className="text-xs bg-transparent text-accent-purple hover:bg-accent-purple hover:text-primary-white">
+  <ButtonPrimary
+    onClick={() => {}}
+    disabled={isRescheduling}
+    className="flex-1 text-xs px-4 text-primary-white "
+  >
+    View Patient Profile
+  </ButtonPrimary>
+
+  {currentUser?.userRole === 'doctor' && primaryTitle.includes('Upcoming') && (
+      <>
+        {isRescheduling ? (
+          <>
+            <ButtonPrimary
+              onClick={saveReschedule}
+              className="text-xs bg-transparent text-accent-purple hover:bg-accent-purple hover:text-primary-white"
+            >
+              Save
+            </ButtonPrimary>
+            <ButtonPrimary
+              onClick={cancelEditing}
+              className="text-xs bg-transparent text-accent-purple hover:bg-accent-purple hover:text-primary-white"
+            >
+              Cancel
+            </ButtonPrimary>
+          </>
+        ) : (
+          <ButtonPrimary
+            onClick={startEditing}
+            className="text-xs bg-transparent text-accent-purple hover:bg-accent-purple hover:text-primary-white"
+          >
             Reschedule
-        </ButtonPrimary>}
-        {currentUser?.userRole === 'doctor' && !data.doctor  && 
-        <ButtonPrimary 
-          onClick={onAcceptAppointment}
-          className="min-w-[60%] text-center gap-2 text-sm bg-transparent text-accent-purple hover:bg-accent-purple hover:text-primary-white">
-            {acceptLoading && <CircularProgress color="inherit" size={14} />} Accept Appointment
-        </ButtonPrimary>}
-      </div>
+          </ButtonPrimary>
+        )}
+      </>
+    )}
+
+    {currentUser?.userRole === 'doctor' && !data.doctor && (
+      <ButtonPrimary
+        onClick={onAcceptAppointment}
+        className="min-w-[60%] text-center gap-2 text-sm bg-transparent text-accent-purple hover:bg-accent-purple hover:text-primary-white"
+      >
+        {acceptLoading && <CircularProgress color="inherit" size={14} />} Accept Appointment
+      </ButtonPrimary>
+    )}
+  </div>
     </div>
   )
 }

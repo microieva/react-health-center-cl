@@ -20,16 +20,19 @@ export const DoctorDashboard = () => {
   const {stats:data, loading, error} = useDoctorDashboard();
   const [latestPatients, setLatesPatients] = useState<PagedResponse<Appointment>>({slice: [], length: 0});
 
+
   useEffect(() => {
     if (data) {
-      const combinedAppointments = [
-        ...(data?.upcomingAppointments?.slice || []),
-        ...(data?.pastAppointments?.slice || []),
-      ];
+      const byStartAsc = (a: Appointment, b: Appointment) =>
+        new Date(a.start).getTime() - new Date(b.start).getTime();
 
-      combinedAppointments.sort(
-        (a, b) => new Date(b.start).getTime() - new Date(a.start).getTime()
-      );
+      const upcomingSorted = [...(data?.upcomingAppointments?.slice ?? [])].sort(byStartAsc);
+      const pastSorted = [...(data?.pastAppointments?.slice ?? [])].sort(byStartAsc);
+
+      const combinedAppointments = [
+        ...upcomingSorted.map((a) => ({ ...a, _kind: 'upcoming' as const })),
+        ...pastSorted.map((a) => ({ ...a, _kind: 'past' as const })),
+      ];
 
       const seen = new Set<string>();
       const unique = combinedAppointments.filter((appointment) => {
@@ -94,12 +97,14 @@ export const DoctorDashboard = () => {
           {stats.map((stat, index) => {
             
             return (
-              <StatsGrid 
-                trend={stat.trend} 
-                title={stat.title} 
-                icon={stat.icon} 
-                value={stat.value} 
-                index={index} />
+              <div key={index}>
+                <StatsGrid 
+                  trend={stat.trend} 
+                  title={stat.title} 
+                  icon={stat.icon} 
+                  value={stat.value} 
+                  index={index} />
+              </div>
             );
           })}
         </div>

@@ -192,6 +192,11 @@ export const usePastAppointments = (options: PaginationOptions) => {
 
 export const useAcceptAppointment = () => {
   const [mutate, { loading, error, data }] = useMutation(ACCEPT_APPOINTMENT, {
+    refetchQueries: 
+      [
+        'GetUpcomingAppointments', 
+      ],
+    awaitRefetchQueries: true,
     update: (cache, { data }, { variables }) => {
       if (!data?.acceptAppointment?.success || !variables) return;
 
@@ -210,22 +215,12 @@ export const useAcceptAppointment = () => {
                 (ref: any) => String(readField('id', ref)) !== String(acceptedId)
               ),
             };
-          },
+          }
         },
       });
-
-      // Evict the appointment from normalized cache
       cache.evict({ id: `Appointment:${acceptedId}` });
-      cache.gc();
-    },
-    refetchQueries: 
-      [
-        'GetUpcomingAppointments', 
-        'GetPendingAppointments', 
-        'CountPendingAppointments', 
-        'CountUpcomingAppointments'
-      ],
-    awaitRefetchQueries: true,
+      //cache.gc();
+    }
   });
 
   const acceptAppointment = async (appointmentId: number) => {
@@ -248,107 +243,3 @@ export const useAcceptAppointment = () => {
     message: data?.acceptAppointment?.message,
   };
 };
-
-//   const [isConnected, setIsConnected] = useState<boolean>(false);
-//   const [connectionAttempts, setConnectionAttempts] = useState<number>(0);
-//   const reconnectTimer = useRef<NodeJS.Timeout | null>(null);
-
-//   const defaultVariables: PastAppointmentsVariables = {
-//     pageIndex: 0,
-//     pageLimit: 10,
-//     sortActive: 'start',
-//     sortDirection: 'DESC',
-//     filterInput: null,
-//   };
-
-//   const mergedVariables = { ...defaultVariables, ...variables };
-
-//   const { data, loading, error: queryError, refetch: refetchQuery } = useQuery(GET_PAST_APPOINTMENTS, {
-//     variables: mergedVariables,
-//     fetchPolicy: 'network-only',
-//     onCompleted: (data: PastAppointmentsResponse) => {
-//       log('Past appointments fetched:', data?.pastAppointments?.length);
-//     },
-//     onError: (err: any) => {
-//       logError('Failed to fetch past appointments', err);
-//     },
-//   });
-
-//   // const { error: subscriptionError } = useSubscription(UNREAD_FEEDBACK_SUBSCRIPTION, {
-//   //   onData: ({ data }) => {
-//   //     const newCount = data.data?.countUnreadFeedback;
-//   //     if (newCount !== undefined) {
-//   //       //setCount(newCount);
-//   //       setIsConnected(true);
-//   //       setConnectionAttempts(0);
-//   //       log('Real-time unread feedback count updated:', newCount);
-//   //     }
-//   //   },
-//   //   onError: (err) => {
-//   //     setIsConnected(false);
-//   //     setConnectionAttempts((prev) => prev + 1);
-//   //     logError('Unread feedback subscription error', err);
-      
-//   //     // Auto-reconnect after 5 seconds
-//   //     if (reconnectTimer.current) {
-//   //       clearTimeout(reconnectTimer.current);
-//   //     }
-//   //     reconnectTimer.current = setTimeout(() => {
-//   //       log('Attempting to reconnect WebSocket...');
-//   //       // Reconnection is handled by Apollo Client
-//   //       setConnectionAttempts((prev) => prev + 1);
-//   //     }, 5000);
-//   //   },
-//   //   onComplete: () => {
-//   //     setIsConnected(false);
-//   //     log('Unread feedback WebSocket connection closed');
-//   //   },
-//   // });
-
-//   const refetch = useCallback(async (): Promise<void> => {
-//     try {
-//       await refetchQuery();
-//     } catch (err) {
-//       logError('Failed to refetch unread feedback', err);
-//     }
-//   }, [refetchQuery]);
-
-//   const markAsRead = useCallback(async (): Promise<void> => {
-//     try {
-//       // Your mutation to mark feedback as read
-//       // await markFeedbackAsRead();
-//       await refetch();
-//       log('Feedback marked as read');
-//     } catch (err) {
-//       logError('Failed to mark feedback as read', err);
-//     }
-//   }, [refetch]);
-
-//   const reconnect = useCallback(() => {
-//     setIsConnected(false);
-//     setConnectionAttempts(0);
-//     //setError(null);
-//     refetch();
-//     log('Manual reconnection attempted');
-//   }, [refetch]);
-
-//   // Cleanup
-//   useEffect(() => {
-//     return () => {
-//       if (reconnectTimer.current) {
-//         clearTimeout(reconnectTimer.current);
-//       }
-//     };
-//   }, []);
-
-//   return {
-//     data: data?.pastAppointments || { length: 0, slice: [] },
-//     loading,
-//     error: queryError || null,
-//     isConnected,
-//     connectionAttempts,
-//     refetch,
-//     markAsRead,
-//     reconnect,
-//   };
-// };
