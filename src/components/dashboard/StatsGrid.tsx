@@ -12,8 +12,25 @@ export const StatsGrid = ({icon, index, title, value = '-', trend}: Props) => {
   const Icon = icon;
   const isPositive = trend.startsWith('+');
 
+  const handleClick = () => {
+    switch (title) {
+      case 'Pending Requests':
+        window.location.href = '/appointments?view=pending';
+        break;
+      case 'Upcoming Appointments':
+        window.location.href = '/appointments?view=upcoming';
+        break;
+      case 'Past Appointments':
+        window.location.href = '/appointments?view=past';
+        break;
+      default:
+        break;  
+    }
+  } 
+
   return (
     <div
+      onClick={handleClick}
       key={index}
       className="rounded-xl p-4 md:p-3 border transition-all duration-200 hover:shadow-lg group hover:cursor-pointer"
       style={{

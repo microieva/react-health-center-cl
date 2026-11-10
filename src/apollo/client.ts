@@ -49,7 +49,7 @@ export const client = new ApolloClient({
       Query: {
         fields: {
           pendingAppointments: {
-            keyArgs: false, // ✅ Merge all pages
+            keyArgs: false, 
             merge(existing, incoming) {
               if (!existing) return incoming;
               if (!incoming) return existing;

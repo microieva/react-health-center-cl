@@ -3,18 +3,11 @@ import { Box, Skeleton, Stack } from '@mui/material';
 
 export const AppointmentsSkeleton: React.FC = () => {
   return (
-    <Box sx={{ maxWidth: 900, mx: 'auto', p: { xs: 2, md: 3 } }}>
+    <Box sx={{ maxWidth: 1200, mx: 'auto', py:2 }}>
       {/* Header */}
       <Box sx={{ mb: 4 }}>
         <Skeleton variant="text" width={200} height={40} />
         <Skeleton variant="text" width={150} height={24} />
-      </Box>
-
-      {/* Tabs */}
-      <Box sx={{ mb: 3, display: 'flex', gap: 2 }}>
-        <Skeleton variant="rounded" width={120} height={40} />
-        <Skeleton variant="rounded" width={120} height={40} />
-        <Skeleton variant="rounded" width={120} height={40} />
       </Box>
 
       {/* Stepper items */}

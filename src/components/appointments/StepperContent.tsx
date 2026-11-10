@@ -49,7 +49,6 @@ interface StepperContentProps {
   isLoading: boolean;
   onLoadMore: (selectedName: string | null) => void;
   hasMore: boolean;
-  newItemsStartIndex: number | null;
 }
 
 interface WeekGroup {
@@ -80,16 +79,14 @@ const groupAppointmentsByMonthAndWeek = (
 ): MonthGroup[] => {
   const isPastView = view === 'past';
 
-  // 1. Month grouping
+  // 1. Month grouping — "Today" bucket removed; today's items fall into "This Month"
   const monthMap: { [key: string]: AppointmentData[] } = {};
 
   appointments.forEach((appointment) => {
     const date = new Date(appointment.start);
     let key: string;
 
-    if (isToday(date)) {
-      key = 'Today';
-    } else if (isThisMonth(date)) {
+    if (isThisMonth(date)) {
       key = 'This Month';
     } else {
       key = format(date, 'MMMM yyyy');
@@ -121,7 +118,6 @@ const groupAppointmentsByMonthAndWeek = (
       isPastView ? b.sortValue - a.sortValue : a.sortValue - b.sortValue
     );
 
-    // Sort appointments inside each week
     weeks.forEach((w) =>
       w.appointments.sort((a, b) => {
         const diff = new Date(a.start).getTime() - new Date(b.start).getTime();
@@ -132,8 +128,8 @@ const groupAppointmentsByMonthAndWeek = (
     return { key: monthKey, weeks };
   });
 
-  // 3. Order months: Today, This Month, then chronological
-  const priority = (k: string) => (k === 'Today' ? 0 : k === 'This Month' ? 1 : 2);
+  // 3. Order months: "This Month" first, then chronological
+  const priority = (k: string) => (k === 'This Month' ? 0 : 1);
 
   result.sort((a, b) => {
     const pa = priority(a.key);
@@ -179,8 +175,7 @@ export const StepperContent: React.FC<StepperContentProps> = ({
   data,
   isLoading,
   onLoadMore,
-  hasMore,
-  newItemsStartIndex,
+  hasMore
 }) => {
   let globalIndex = 0;
   const { currentUser } = useAuth();
@@ -205,41 +200,40 @@ export const StepperContent: React.FC<StepperContentProps> = ({
   };
 
   const computeInitialOpenState = (
-  groups: MonthGroup[],
-  view: string
+    groups: MonthGroup[],
+    view: string
   ) => {
-  const months = new Set<string>();
-  const weeks = new Set<string>();
-  const days = new Set<string>();
+    const months = new Set<string>();
+    const weeks = new Set<string>();
+    const days = new Set<string>();
 
-  if (groups.length === 0) return { months, weeks, days };
+    if (groups.length === 0) return { months, weeks, days };
 
-  // 1. First month open
-  const firstMonth = groups[0];
-  const firstMonthId = `${firstMonth.key}-0`;
-  months.add(firstMonthId);
+    // 1. First month open
+    const firstMonth = groups[0];
+    const firstMonthId = `${firstMonth.key}-0`;
+    months.add(firstMonthId);
 
-  // 2. First two weeks of the first month open
-  firstMonth.weeks.forEach((week, weekIndex) => {
-  if (weekIndex > 1) return; // only weeks 0 and 1
+    // 2. First two weeks of the first month open
+    firstMonth.weeks.forEach((week, weekIndex) => {
+    if (weekIndex > 1) return; // only weeks 0 and 1
 
-  const weekId = `${firstMonthId}-${week.key}`;
-  weeks.add(weekId);
+    const weekId = `${firstMonthId}-${week.key}`;
+    weeks.add(weekId);
 
-  // 3. All days of the FIRST week open; other weeks' days stay closed
-  if (weekIndex === 0) {
-    // rebuild the day keys the same way the JSX does
-    const dayKeys = new Set<string>();
-    week.appointments.forEach((appointment) => {
-      dayKeys.add(format(new Date(appointment.start), 'yyyy-MM-dd'));
+    // 3. All days of the FIRST week open; other weeks' days stay closed
+    if (weekIndex === 0) {
+      const dayKeys = new Set<string>();
+      week.appointments.forEach((appointment) => {
+        dayKeys.add(format(new Date(appointment.start), 'yyyy-MM-dd'));
+      });
+      dayKeys.forEach((dayKey) => {
+        days.add(`${weekId}-${dayKey}`);
+      });
+    }
     });
-    dayKeys.forEach((dayKey) => {
-      days.add(`${weekId}-${dayKey}`);
-    });
-  }
-  });
 
-  return { months, weeks, days };
+    return { months, weeks, days };
   };
 
   useEffect(() => {
@@ -372,6 +366,9 @@ export const StepperContent: React.FC<StepperContentProps> = ({
           </Typography>
           <Typography variant="body2" sx={{ color: 'var(--color-primary-dark-blue)', fontWeight: 600 }}>
             Total: {appointments.length} appointment{appointments.length > 1 ? 's' : ''}
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'var(--color-primary-dark-blue)', fontWeight: 600 }}>
+            Showing: {appointments.slice.length} appointment{appointments.slice.length > 1 ? 's' : ''}
           </Typography>
         </Box>
         <Box sx={{ mb: 0, display: 'flex', gap: 0.5, flexDirection: 'column' }}>
@@ -621,12 +618,12 @@ export const StepperContent: React.FC<StepperContentProps> = ({
                                     >
                                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                                         <TypographySmall
-                                          className={
-                                            `${isTodayDay ? 'text-accent-purple' : 'text-primary-slate-gray'} text-xs`
-                                          }
-                                        >
-                                          {format(day.date, 'EEEE, MMM d')}
-                                        </TypographySmall>
+                                            className={`${isTodayDay ? 'text-accent-purple' : 'text-primary-slate-gray'} text-xs`}
+                                          >
+                                            {isTodayDay
+                                              ? `Today |  ${format(day.date, 'EEEE, MMM d')}`
+                                              : format(day.date, 'EEEE, MMM d')}
+                                          </TypographySmall>
                                         <Chip
                                           label={`${dayAppointmentCount} appointment${
                                             dayAppointmentCount > 1 ? 's' : ''
@@ -793,8 +790,8 @@ export const StepperContent: React.FC<StepperContentProps> = ({
 
                                               <Box
                                                 sx={{
-                                                  mt: 1.5,
-                                                  pt: 1.5,
+                                                  mt: 0.5,
+                                                  pt: 1,
                                                   borderTop: '1px solid var(--color-primary-light-gray)',
                                                   display: 'flex',
                                                   flexDirection: 'row',

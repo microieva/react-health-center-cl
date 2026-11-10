@@ -117,13 +117,14 @@ export const usePendingAppointments = (options: PaginationOptions) => {
     pageIndex: options.pageIndex ?? 0,
     pageLimit: options.pageLimit ?? 10,
     sortActive: options.sortActive ?? 'start',
-    sortDirection: options.sortDirection ?? 'DESC',
+    sortDirection: options.sortDirection ?? 'ASC',
     filterInput: options.filterInput ?? null,
   };
 
   const { data, loading, error, refetch, fetchMore } = useQuery(GET_PENDING_APPOINTMENTS, {
     variables,
     fetchPolicy: 'cache-first',
+    //fetchPolicy: 'cache-and-network',
     notifyOnNetworkStatusChange: true, 
   });
 
@@ -143,7 +144,7 @@ export const useUpcomingAppointments = (options: PaginationOptions) => {
     pageIndex: options.pageIndex ?? 0,
     pageLimit: options.pageLimit ?? 10,
     sortActive: options.sortActive ?? 'start',
-    sortDirection: options.sortDirection ?? 'DESC',
+    sortDirection: options.sortDirection ?? 'ASC',
     filterInput: options.filterInput ?? null,
   };
 

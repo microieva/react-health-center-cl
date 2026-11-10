@@ -57,7 +57,7 @@ export const DoctorDashboard = () => {
       title: 'Pending Requests',
       value: data?.countPendingAppointments.toString(),
       icon: EventNoteRoundedIcon,
-      trend: '+5%',
+      trend: '+5%'
     },
     {
       title: 'Unread Messages',
